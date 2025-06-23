@@ -697,10 +697,10 @@ Business Path Platform - businesspath.com
                           </div>
                         </div>
                       ) : (
-                        // Preview with progressive blur effect and value proposition columns
+                        // Preview with seamless gradient fade effect
                         <div className="relative">
-                          {/* Three paragraphs with progressive blur */}
-                          <div className="relative">
+                          {/* Three paragraphs with seamless gradient fade */}
+                          <div className="relative mb-8">
                             {(() => {
                               const sentences =
                                 aiAnalysis.fullAnalysis.split(". ");
@@ -721,39 +721,29 @@ Business Path Platform - businesspath.com
                                 .join(". ");
 
                               return (
-                                <>
+                                <div
+                                  className="text-blue-50 leading-relaxed text-lg"
+                                  style={{
+                                    WebkitMask:
+                                      "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0) 100%)",
+                                    mask: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0) 100%)",
+                                  }}
+                                >
                                   {/* First paragraph - fully visible */}
-                                  <p className="mb-4 text-blue-50 leading-relaxed">
-                                    {firstParagraph}
-                                  </p>
+                                  <p className="mb-4">{firstParagraph}</p>
 
-                                  {/* Second paragraph - start of blur */}
-                                  <p className="mb-4 text-blue-50 leading-relaxed relative">
-                                    {secondParagraph}
-                                  </p>
+                                  {/* Second paragraph - starts to fade */}
+                                  <p className="mb-4">{secondParagraph}</p>
 
-                                  {/* Third paragraph - more blur */}
-                                  <p className="mb-6 text-blue-50 leading-relaxed relative">
-                                    {thirdParagraph}
-                                  </p>
-                                </>
+                                  {/* Third paragraph - fades to invisible */}
+                                  <p className="mb-6">{thirdParagraph}</p>
+                                </div>
                               );
                             })()}
-
-                            {/* Progressive blur overlay that increases from middle of first paragraph to end */}
-                            <div
-                              className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-purple-600/80 backdrop-blur-sm"
-                              style={{
-                                background:
-                                  "linear-gradient(to bottom, transparent 30%, rgba(147, 51, 234, 0.1) 40%, rgba(147, 51, 234, 0.3) 60%, rgba(147, 51, 234, 0.6) 100%)",
-                                backdropFilter:
-                                  "blur(0px) blur(1px) blur(2px) blur(4px)",
-                              }}
-                            ></div>
                           </div>
 
-                          {/* Value Proposition Columns - positioned over the blur */}
-                          <div className="relative z-10 mt-8">
+                          {/* Value Proposition Columns - fully visible below faded text */}
+                          <div className="mb-16">
                             <div className="grid md:grid-cols-2 gap-8">
                               {/* Column 1 */}
                               <div className="space-y-6">

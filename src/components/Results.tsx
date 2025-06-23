@@ -1015,14 +1015,16 @@ Business Path Platform - businesspath.com
 
                     {/* Action Elements */}
                     <div className="space-y-3 mt-auto">
-                      {/* Primary CTA */}
-                      <button
-                        onClick={() => handleViewFullReport(path)}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform group-hover:scale-[1.02] flex items-center justify-center"
-                      >
-                        <FileText className="h-4 w-4 mr-2" />
-                        View Full Report
-                      </button>
+                      {/* Primary CTA - Only show if card is not locked */}
+                      {!(index > 0 && !hasUnlockedAnalysis) && (
+                        <button
+                          onClick={() => handleViewFullReport(path)}
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform group-hover:scale-[1.02] flex items-center justify-center"
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          View Full Report
+                        </button>
+                      )}
 
                       {/* Secondary CTA - Centered and positioned below button */}
                       <div className="text-center">

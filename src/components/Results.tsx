@@ -217,6 +217,9 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
     setShowUnlockModal(false);
     setIsProcessingPayment(false);
 
+    // Navigate to full report analysis page
+    setShowFullReport(true);
+
     // In a real implementation, this would:
     // 1. Process payment through Stripe
     // 2. Create unique URL for user's results

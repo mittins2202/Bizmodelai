@@ -185,7 +185,7 @@ Write in an engaging, personalized tone as if speaking directly to them.
     }
   }
 
-  private async makeOpenAIRequest(
+  async makeOpenAIRequest(
     prompt: string,
     maxTokens: number = 200,
     temperature: number = 0.7,

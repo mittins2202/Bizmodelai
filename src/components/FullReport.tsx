@@ -713,7 +713,7 @@ Business Path Platform - Complete Analysis Report
                 return (
                   <button
                     key={section.id}
-                    onClick={() => scrollToSection(section.id)}
+                    onClick={() => handleSectionClick(section.id)}
                     className={`w-full flex items-center px-4 py-3 text-left rounded-lg mb-2 transition-colors ${
                       activeSection === section.id
                         ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700"

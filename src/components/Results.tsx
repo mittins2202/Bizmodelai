@@ -762,27 +762,6 @@ Business Path Platform - businesspath.com
                     </motion.div>
                   )}
                 </div>
-
-                {/* CTAs at bottom of AI preview block */}
-                <div className="mt-8 space-y-4">
-                  <button
-                    onClick={() => handleViewFullReport(personalizedPaths[0])}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
-                  >
-                    <FileText className="h-5 w-5 mr-2 inline" />
-                    View Full Report
-                  </button>
-
-                  <div className="text-center">
-                    <button
-                      onClick={() => handleLearnMore(personalizedPaths[0])}
-                      className="text-blue-100 hover:text-white font-medium text-lg transition-all duration-300 inline-flex items-center group"
-                    >
-                      <span>Get started with {personalizedPaths[0]?.name}</span>
-                      <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                    </button>
-                  </div>
-                </div>
               </div>
             </motion.div>
           )

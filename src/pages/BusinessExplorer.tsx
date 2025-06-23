@@ -17,7 +17,12 @@ const BusinessExplorer = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("All");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [showPaywallModal, setShowPaywallModal] = useState(false);
+  const [paywallType, setPaywallType] = useState<
+    "quiz-required" | "learn-more"
+  >("quiz-required");
   const navigate = useNavigate();
+  const { hasCompletedQuiz, canAccessBusinessModel } = usePaywall();
 
   const categories = [
     "All",

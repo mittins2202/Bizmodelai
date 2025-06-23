@@ -372,7 +372,7 @@ const BusinessModelCard = ({
           <div className="text-center w-full">
             <button
               onClick={handleLearnMore}
-              className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-300 inline-flex items-center justify-center group"
+              className="text-black hover:text-gray-700 font-medium text-sm transition-all duration-300 inline-flex items-center justify-center group"
             >
               <span>Learn More About {model.title}</span>
               <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />

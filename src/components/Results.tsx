@@ -929,7 +929,7 @@ Business Path Platform - businesspath.com
                 )}
                 {index === 1 && (
                   <motion.div
-                    className="absolute -top-4 left-1/2 transform -translate-x-1/2"
+                    className="absolute -top-4 right-1/4 transform translate-x-1/2"
                     initial={{ scale: 0, rotate: -10 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ duration: 0.6, delay: 0.9 }}
@@ -942,7 +942,7 @@ Business Path Platform - businesspath.com
                 )}
                 {index === 2 && (
                   <motion.div
-                    className="absolute -top-4 left-1/2 transform -translate-x-1/2"
+                    className="absolute -top-4 right-1/4 transform translate-x-1/2"
                     initial={{ scale: 0, rotate: -10 }}
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ duration: 0.6, delay: 1.0 }}

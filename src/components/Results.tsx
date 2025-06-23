@@ -1130,86 +1130,13 @@ Business Path Platform - businesspath.com
         </motion.div>
       </div>
 
-      {/* Payment Modal */}
-      <AnimatePresence>
-        {showUnlockModal && (
-          <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="bg-white rounded-3xl p-8 max-w-md w-full relative"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <button
-                onClick={() => setShowUnlockModal(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-              >
-                <X className="h-6 w-6" />
-              </button>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CreditCard className="h-8 w-8 text-white" />
-                </div>
-
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Unlock Your Complete Analysis
-                </h3>
-                <p className="text-gray-600 text-center mb-8">
-                  Get instant access to your personalized AI analysis, detailed
-                  insights, and step-by-step action plan.
-                </p>
-
-                <div className="bg-gray-50 rounded-xl p-4 mb-6">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">AI Business Analysis</span>
-                    <span className="font-bold text-gray-900">$9.99</span>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    One-time payment • Instant access
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <button
-                    onClick={handlePayment}
-                    disabled={isProcessingPayment}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 disabled:opacity-50 flex items-center justify-center"
-                  >
-                    {isProcessingPayment ? (
-                      <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <CreditCard className="h-5 w-5 mr-2" />
-                        Complete Purchase - $9.99
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setShowUnlockModal(false)}
-                    className="w-full border-2 border-gray-300 text-gray-700 py-4 rounded-xl font-semibold hover:border-gray-400 transition-all duration-300"
-                  >
-                    Maybe Later
-                  </button>
-                </div>
-
-                <div className="mt-6 text-xs text-gray-500 text-center">
-                  🔒 Secure payment • 30-day money-back guarantee
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Paywall Modal */}
+      <PaywallModal
+        isOpen={showUnlockModal}
+        onClose={() => setShowUnlockModal(false)}
+        onUnlock={handlePayment}
+        type={paywallType}
+      />
     </div>
   );
 };

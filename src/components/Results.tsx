@@ -839,30 +839,28 @@ Business Path Platform - businesspath.com
                     </div>
                   </div>
 
-                  {/* Paywall Overlay */}
+                  {/* Paywall Section */}
                   {!hasUnlockedAnalysis && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="mt-12 bg-gradient-to-t from-purple-600 via-purple-600/95 to-transparent pt-16 pb-6 px-6 text-center rounded-b-2xl"
+                      className="mt-12 text-center"
                     >
-                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                        <Lock className="h-8 w-8 text-white mx-auto mb-4" />
-                        <h4 className="text-xl font-bold text-white mb-2">
-                          Unlock your results with small one-time fee
-                        </h4>
-                        <p className="text-blue-100 mb-6">
-                          Get the full personalized analysis, detailed insights,
-                          and success strategies for just $9.99
-                        </p>
-                        <button
-                          onClick={handleUnlockAnalysis}
-                          className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 shadow-xl"
-                        >
-                          Unlock Full Analysis - $9.99
-                        </button>
-                      </div>
+                      <Lock className="h-8 w-8 text-white mx-auto mb-4" />
+                      <h4 className="text-xl font-bold text-white mb-2">
+                        Unlock your results with small one-time fee
+                      </h4>
+                      <p className="text-blue-100 mb-6">
+                        Get the full personalized analysis, detailed insights,
+                        and success strategies for just $9.99
+                      </p>
+                      <button
+                        onClick={handleUnlockAnalysis}
+                        className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                      >
+                        Unlock Full Analysis - $9.99
+                      </button>
                     </motion.div>
                   )}
                 </div>

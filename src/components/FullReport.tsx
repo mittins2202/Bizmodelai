@@ -261,9 +261,14 @@ const FullReport: React.FC<FullReportProps> = ({
   const [activeSection, setActiveSection] = useState("welcome");
   const [aiInsights, setAiInsights] = useState<AIInsights | null>(null);
   const [isGeneratingAI, setIsGeneratingAI] = useState(true);
-  const [showSidebar, setShowSidebar] = useState(false); // Set to false by default
+  const [showNav, setShowNav] = useState(false);
+
   const navigate = useNavigate();
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Calculate trait scores based on quiz data
   const traitScores = {
     socialComfort: calculateSocialComfort(quizData),

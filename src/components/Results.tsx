@@ -845,7 +845,7 @@ Business Path Platform - businesspath.com
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-purple-600 via-purple-600/95 to-transparent pt-16 pb-6 px-6 text-center"
+                      className="mt-12 bg-gradient-to-t from-purple-600 via-purple-600/95 to-transparent pt-16 pb-6 px-6 text-center rounded-b-2xl"
                     >
                       <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                         <Lock className="h-8 w-8 text-white mx-auto mb-4" />

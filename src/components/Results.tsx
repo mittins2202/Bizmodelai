@@ -209,6 +209,11 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
   };
 
   const handleViewFullReport = (path: BusinessPath) => {
+    if (!canAccessFullReport()) {
+      setPaywallType("full-report");
+      setShowUnlockModal(true);
+      return;
+    }
     setShowFullReport(true);
   };
 

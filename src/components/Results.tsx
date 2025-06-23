@@ -809,6 +809,15 @@ Business Path Platform - businesspath.com
                 variants={fadeInUp}
                 whileHover={{ y: -5 }}
               >
+                {/* Locked overlay for cards 2 and 3 when not unlocked */}
+                {index > 0 && !hasUnlockedAnalysis && (
+                  <LockedCardOverlay
+                    onUnlock={() => {
+                      setPaywallType("business-model");
+                      setShowUnlockModal(true);
+                    }}
+                  />
+                )}
                 {index === 0 && (
                   <motion.div
                     className="absolute -top-4 left-1/2 transform -translate-x-1/2"

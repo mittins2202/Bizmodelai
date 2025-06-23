@@ -1,32 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowDown,
-  Download,
-  Mail,
-  Share2,
-  Clock,
-  DollarSign,
-  TrendingUp,
-  Zap,
-  CheckCircle,
-  AlertTriangle,
-  ArrowRight,
-  BarChart3,
-  Users,
-  Globe,
-  Target,
-  Lightbulb,
-  Star,
-  Award,
-  Rocket,
-  Menu,
-  X,
-  ArrowLeft,
-} from "lucide-react";
-import { QuizData, BusinessPath } from "../types";
-import { AIService } from "../utils/aiService";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowDown, Download, Mail, Share2, Clock, DollarSign, TrendingUp, Zap, CheckCircle, AlertTriangle, ArrowRight, BarChart3, Users, Globe, Target, Lightbulb, Star, Award, Rocket, Menu, X, ArrowLeft } from 'lucide-react';
+import { QuizData, BusinessPath } from '../types';
+import { AIService } from '../utils/aiService';
+import { useNavigate } from 'react-router-dom';
 
 interface FullReportProps {
   quizData: QuizData;
@@ -71,12 +48,7 @@ interface AIInsights {
   avoidReasons: string[];
 }
 
-const TraitSlider: React.FC<TraitSliderProps> = ({
-  label,
-  value,
-  leftLabel,
-  rightLabel,
-}) => {
+const TraitSlider: React.FC<TraitSliderProps> = ({ label, value, leftLabel, rightLabel }) => {
   const percentage = Math.round(value * 100);
 
   return (
@@ -105,9 +77,7 @@ const TraitSlider: React.FC<TraitSliderProps> = ({
   );
 };
 
-const IncomeGraph: React.FC<{ businessModel: string }> = ({
-  businessModel,
-}) => {
+const IncomeGraph: React.FC<{ businessModel: string }> = ({ businessModel }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -120,7 +90,7 @@ const IncomeGraph: React.FC<{ businessModel: string }> = ({
     { month: 6, income: 2500 },
     { month: 12, income: 8000 },
     { month: 18, income: 15000 },
-    { month: 24, income: 25000 },
+    { month: 24, income: 25000 }
   ];
 
   const handleMouseMove = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -134,10 +104,7 @@ const IncomeGraph: React.FC<{ businessModel: string }> = ({
       const percentage = x / rect.width;
       const maxIncome = 25000;
       const income = Math.round(maxIncome * Math.pow(percentage, 1.5));
-      setMousePosition({
-        x,
-        y: rect.height - (income / maxIncome) * rect.height,
-      });
+      setMousePosition({ x, y: rect.height - (income / maxIncome) * rect.height });
     }
   };
 
@@ -149,9 +116,7 @@ const IncomeGraph: React.FC<{ businessModel: string }> = ({
 
   return (
     <div className="relative">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">
-        Income Potential Over Time
-      </h3>
+      <h3 className="text-xl font-bold text-gray-900 mb-4">Income Potential Over Time</h3>
       <div className="relative bg-white p-6 rounded-xl border border-gray-200">
         <svg
           ref={svgRef}
@@ -165,18 +130,8 @@ const IncomeGraph: React.FC<{ businessModel: string }> = ({
         >
           {/* Grid lines */}
           <defs>
-            <pattern
-              id="grid"
-              width="40"
-              height="30"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 40 0 L 0 0 0 30"
-                fill="none"
-                stroke="#f3f4f6"
-                strokeWidth="1"
-              />
+            <pattern id="grid" width="40" height="30" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 30" fill="none" stroke="#f3f4f6" strokeWidth="1"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
@@ -229,7 +184,7 @@ const IncomeGraph: React.FC<{ businessModel: string }> = ({
             style={{
               left: mousePosition.x + 10,
               top: mousePosition.y - 40,
-              transform: mousePosition.x > 300 ? "translateX(-100%)" : "none",
+              transform: mousePosition.x > 300 ? 'translateX(-100%)' : 'none'
             }}
           >
             ${getIncomeAtPosition(mousePosition.x, 400).toLocaleString()}/month
@@ -237,28 +192,17 @@ const IncomeGraph: React.FC<{ businessModel: string }> = ({
         )}
 
         {/* Axis labels */}
-        <div className="absolute bottom-2 left-0 text-xs text-gray-500">
-          Month 0
-        </div>
-        <div className="absolute bottom-2 right-0 text-xs text-gray-500">
-          Month 24
-        </div>
-        <div className="absolute top-2 left-0 text-xs text-gray-500 transform -rotate-90 origin-left">
-          $25K
-        </div>
+        <div className="absolute bottom-2 left-0 text-xs text-gray-500">Month 0</div>
+        <div className="absolute bottom-2 right-0 text-xs text-gray-500">Month 24</div>
+        <div className="absolute top-2 left-0 text-xs text-gray-500 transform -rotate-90 origin-left">$25K</div>
         <div className="absolute bottom-2 left-0 text-xs text-gray-500">$0</div>
       </div>
     </div>
   );
 };
 
-const FullReport: React.FC<FullReportProps> = ({
-  quizData,
-  topPath,
-  allPaths,
-  onBack,
-}) => {
-  const [activeSection, setActiveSection] = useState("welcome");
+const FullReport: React.FC<FullReportProps> = ({ quizData, topPath, allPaths, onBack }) => {
+  const [activeSection, setActiveSection] = useState('welcome');
   const [aiInsights, setAiInsights] = useState<AIInsights | null>(null);
   const [isGeneratingAI, setIsGeneratingAI] = useState(true);
   const [showNav, setShowNav] = useState(false);
@@ -280,7 +224,7 @@ const FullReport: React.FC<FullReportProps> = ({
     feedbackResilience: calculateFeedbackResilience(quizData),
     structurePreference: calculateStructurePreference(quizData),
     creativity: calculateCreativity(quizData),
-    communicationConfidence: calculateCommunicationConfidence(quizData),
+    communicationConfidence: calculateCommunicationConfidence(quizData)
   };
 
   const traitSliders = [
@@ -288,69 +232,65 @@ const FullReport: React.FC<FullReportProps> = ({
       label: "Introvert ←→ Extrovert",
       trait: "socialComfort" as keyof typeof traitScores,
       leftLabel: "Introvert",
-      rightLabel: "Extrovert",
+      rightLabel: "Extrovert"
     },
     {
       label: "Low Discipline ←→ High Discipline",
       trait: "consistency" as keyof typeof traitScores,
       leftLabel: "Low Discipline",
-      rightLabel: "High Discipline",
+      rightLabel: "High Discipline"
     },
     {
       label: "Avoids Risks ←→ Embraces Risks",
       trait: "riskTolerance" as keyof typeof traitScores,
       leftLabel: "Avoids Risks",
-      rightLabel: "Embraces Risks",
+      rightLabel: "Embraces Risks"
     },
     {
       label: "Low Tech Skills ←→ Tech Savvy",
       trait: "techComfort" as keyof typeof traitScores,
       leftLabel: "Low Tech Skills",
-      rightLabel: "Tech Savvy",
+      rightLabel: "Tech Savvy"
     },
     {
       label: "Needs Structure ←→ Works Freely",
       trait: "structurePreference" as keyof typeof traitScores,
       leftLabel: "Needs Structure",
-      rightLabel: "Works Freely",
+      rightLabel: "Works Freely"
     },
     {
       label: "Passive ←→ Self-Driven",
       trait: "motivation" as keyof typeof traitScores,
       leftLabel: "Passive",
-      rightLabel: "Self-Driven",
+      rightLabel: "Self-Driven"
     },
     {
       label: "Takes Feedback Personally ←→ Uses Feedback to Grow",
       trait: "feedbackResilience" as keyof typeof traitScores,
       leftLabel: "Takes Feedback Personally",
-      rightLabel: "Uses Feedback to Grow",
+      rightLabel: "Uses Feedback to Grow"
     },
     {
       label: "Analytical ←→ Creative",
       trait: "creativity" as keyof typeof traitScores,
       leftLabel: "Analytical",
-      rightLabel: "Creative",
+      rightLabel: "Creative"
     },
     {
       label: "Low Confidence ←→ High Confidence",
       trait: "communicationConfidence" as keyof typeof traitScores,
       leftLabel: "Low Confidence",
-      rightLabel: "High Confidence",
-    },
+      rightLabel: "High Confidence"
+    }
   ];
 
   const sections = [
-    { id: "welcome", label: `${topPath.name} Overview`, icon: Star },
-    { id: "ai-report", label: "AI Report", icon: BarChart3 },
-    { id: "personality", label: "Personality Snapshot", icon: Users },
-    {
-      id: "business-overview",
-      label: `${topPath.name} Overview`,
-      icon: Target,
-    },
-    { id: "alternatives", label: "Other Options", icon: Lightbulb },
-    { id: "actions", label: "Next Steps", icon: ArrowRight },
+    { id: 'welcome', label: `${topPath.name} Overview`, icon: Star },
+    { id: 'ai-report', label: 'AI Report', icon: BarChart3 },
+    { id: 'personality', label: 'Personality Snapshot', icon: Users },
+    { id: 'business-overview', label: `${topPath.name} Overview`, icon: Target },
+    { id: 'alternatives', label: 'Other Options', icon: Lightbulb },
+    { id: 'actions', label: 'Next Steps', icon: ArrowRight }
   ];
 
   const otherBestPaths = allPaths.slice(1, 4); // Next 3 best fits
@@ -364,82 +304,96 @@ const FullReport: React.FC<FullReportProps> = ({
     try {
       setIsGeneratingAI(true);
       const aiService = AIService.getInstance();
-      const basicInsights = await aiService.generatePersonalizedInsights(
-        quizData,
-        [topPath],
-      );
+      const basicInsights = await aiService.generatePersonalizedInsights(quizData, [topPath]);
 
       // Generate additional insights for full report
       const extendedInsights = await generateExtendedInsights(basicInsights);
       setAiInsights(extendedInsights);
     } catch (error) {
-      console.error("Error generating AI insights:", error);
+      console.error('Error generating AI insights:', error);
       setAiInsights(generateFallbackInsights());
     } finally {
       setIsGeneratingAI(false);
     }
   };
 
-  const generateExtendedInsights = async (
-    basicInsights: any,
-  ): Promise<AIInsights> => {
-    // This would make additional API calls for extended insights
-    // For now, we'll use the basic insights and add some mock extended data
-    return {
-      ...basicInsights,
-      strengthsWeaknesses: {
-        strengths: [
-          "Strong analytical thinking and problem-solving abilities",
-          "High self-motivation and discipline",
-          "Excellent communication skills",
-          "Adaptable to new technologies and tools",
-        ],
-        weaknesses: [
-          "May struggle with perfectionism and over-analysis",
-          "Could benefit from more structured planning",
-          "Might need to work on delegation skills",
-          "Risk tolerance could be higher for faster growth",
-        ],
-      },
-      whyThisFits: `${topPath.name} is your perfect match because it aligns with your analytical nature, allows for the flexibility you crave, and matches your income goals. Your strong communication skills and tech comfort make you well-suited for this path, while the scalability potential satisfies your growth ambitions.`,
+  const generateExtendedInsights = async (basicInsights: any): Promise<AIInsights> => {
+    try {
+      const aiService = AIService.getInstance();
+
+      // Generate 3 detailed paragraphs for why this business model fits
+      const whyThisFitsPrompt = `
+Based on this user's quiz responses and their top business match (${topPath.name}), generate exactly 3 detailed paragraphs explaining why this specific business model is the perfect fit for them.
+
+User Profile Summary:
+- Main Motivation: ${quizData.mainMotivation}
+- Income Goal: $${quizData.successIncomeGoal}/month
+- Time Commitment: ${quizData.weeklyTimeCommitment} hours/week
+- Tech Skills: ${quizData.techSkillsRating}/5
+- Risk Tolerance: ${quizData.riskComfortLevel}/5
+- Communication Comfort: ${quizData.directCommunicationEnjoyment}/5
+- Creative Enjoyment: ${quizData.creativeWorkEnjoyment}/5
+- Work Structure Preference: ${quizData.workStructurePreference}
+- Self Motivation: ${quizData.selfMotivationLevel}/5
+
+Business Model: ${topPath.name}
+Fit Score: ${topPath.fitScore}%
+
+Generate exactly 3 paragraphs (separated by double line breaks) that explain:
+1. How their personality traits and preferences align perfectly with this business model
+2. Why their specific goals and timeline make this the ideal choice
+3. How their skills and experience set them up for success in this field
+
+Each paragraph should be 3-4 sentences and feel personal and specific to their profile.
+      `;
+
+      const whyThisFitsResponse = await aiService.makeOpenAIRequest(whyThisFitsPrompt, 600, 0.7);
+
+      return {
+        ...basicInsights,
+        strengthsWeaknesses: {
+          strengths: [
+            "Strong analytical thinking and problem-solving abilities",
+            "High self-motivation and discipline",
+            "Excellent communication skills",
+            "Adaptable to new technologies and tools"
+          ],
+          weaknesses: [
+            "May struggle with perfectionism and over-analysis",
+            "Could benefit from more structured planning",
+            "Might need to work on delegation skills",
+            "Risk tolerance could be higher for faster growth"
+          ]
+        },
+        whyThisFits: whyThisFitsResponse || `${topPath.name} is your perfect match because it aligns with your analytical nature, allows for the flexibility you crave, and matches your income goals. Your strong communication skills and tech comfort make you well-suited for this path, while the scalability potential satisfies your growth ambitions.`,
       personalizedPros: [
         "Leverages your existing strengths in communication and analysis",
         "Provides the income potential you're seeking",
         "Offers flexibility that matches your lifestyle preferences",
-        "Allows for gradual scaling as you build confidence",
+        "Allows for gradual scaling as you build confidence"
       ],
       personalizedCons: [
         "May require pushing outside your comfort zone initially",
         "Income might be inconsistent in the early stages",
         "Requires consistent effort and self-discipline",
-        "Could face increased competition as you scale",
+        "Could face increased competition as you scale"
       ],
-      strugglesAndSolutions:
-        "Based on your profile, you may struggle with perfectionism that delays launching. Combat this by setting 'good enough' standards and focusing on iteration over perfection. Your analytical nature might lead to over-research - set time limits for research phases and commit to action deadlines.",
+      strugglesAndSolutions: "Based on your profile, you may struggle with perfectionism that delays launching. Combat this by setting 'good enough' standards and focusing on iteration over perfection. Your analytical nature might lead to over-research - set time limits for research phases and commit to action deadlines.",
       skillsAssessment: {
-        hasSkills: [
-          "Communication",
-          "Analysis",
-          "Problem-solving",
-          "Time management",
-        ],
-        needsSkills: [
-          "Advanced marketing",
-          "Sales techniques",
-          "Financial planning",
-        ],
-        developingSkills: ["Leadership", "Delegation", "Strategic planning"],
+        hasSkills: ["Communication", "Analysis", "Problem-solving", "Time management"],
+        needsSkills: ["Advanced marketing", "Sales techniques", "Financial planning"],
+        developingSkills: ["Leadership", "Delegation", "Strategic planning"]
       },
       alternativeReasons: [
         "This business model offers similar income potential with different skill requirements",
         "Provides a good backup option if your primary choice faces challenges",
-        "Could be combined with your main business for diversified income",
+        "Could be combined with your main business for diversified income"
       ],
       avoidReasons: [
         "This model requires skills that don't align with your strengths",
         "The time commitment doesn't match your availability",
-        "Risk level is higher than your comfort zone",
-      ],
+        "Risk level is higher than your comfort zone"
+      ]
     };
   };
 
@@ -452,13 +406,13 @@ const FullReport: React.FC<FullReportProps> = ({
         "Set realistic 90-day milestones",
         "Join online communities for support",
         "Create a dedicated workspace",
-        "Track your time and energy patterns",
+        "Track your time and energy patterns"
       ],
       potentialChallenges: [
         "Managing time effectively while building momentum",
         "Overcoming perfectionism that might delay progress",
         "Building confidence in your expertise",
-        "Staying motivated during slow initial results",
+        "Staying motivated during slow initial results"
       ],
       successStrategies: [
         "Leverage your analytical nature for data-driven decisions",
@@ -466,79 +420,77 @@ const FullReport: React.FC<FullReportProps> = ({
         "Focus on solving real problems for people",
         "Build systems early for scalability",
         "Invest in continuous learning",
-        "Network strategically for partnerships",
+        "Network strategically for partnerships"
       ],
       personalizedActionPlan: {
         week1: [
           "Research your chosen business model thoroughly",
           "Set up your workspace and basic tools",
-          "Define your target market and ideal customer",
+          "Define your target market and ideal customer"
         ],
         month1: [
           "Launch your minimum viable offering",
           "Create basic marketing materials",
           "Reach out to potential customers",
-          "Establish tracking systems",
+          "Establish tracking systems"
         ],
         month3: [
           "Optimize based on feedback",
           "Scale marketing efforts",
           "Build strategic partnerships",
-          "Develop delivery systems",
+          "Develop delivery systems"
         ],
         month6: [
           "Analyze performance and growth opportunities",
           "Consider expanding offerings",
           "Build team or outsource tasks",
-          "Plan next growth phase",
-        ],
+          "Plan next growth phase"
+        ]
       },
-      motivationalMessage:
-        "Your unique combination of skills and strategic thinking creates the perfect foundation for entrepreneurial success.",
+      motivationalMessage: "Your unique combination of skills and strategic thinking creates the perfect foundation for entrepreneurial success.",
       strengthsWeaknesses: {
         strengths: [
           "Strong analytical and strategic thinking",
           "Excellent communication abilities",
           "High self-motivation and discipline",
-          "Adaptable to new technologies",
+          "Adaptable to new technologies"
         ],
         weaknesses: [
           "May overthink decisions",
           "Could benefit from more risk-taking",
           "Might need help with delegation",
-          "Perfectionism could slow progress",
-        ],
+          "Perfectionism could slow progress"
+        ]
       },
       whyThisFits: `${topPath.name} perfectly matches your analytical nature, communication strengths, and income goals while providing the flexibility and growth potential you're seeking.`,
       personalizedPros: [
         "Aligns with your natural strengths",
         "Matches your income expectations",
         "Provides desired flexibility",
-        "Offers scalability potential",
+        "Offers scalability potential"
       ],
       personalizedCons: [
         "May require stepping outside comfort zone",
         "Income could be inconsistent initially",
         "Requires consistent self-discipline",
-        "Competition may increase over time",
+        "Competition may increase over time"
       ],
-      strugglesAndSolutions:
-        "You may struggle with perfectionism and over-analysis. Set clear deadlines for decisions and focus on 'good enough' to start, then iterate and improve.",
+      strugglesAndSolutions: "You may struggle with perfectionism and over-analysis. Set clear deadlines for decisions and focus on 'good enough' to start, then iterate and improve.",
       skillsAssessment: {
         hasSkills: ["Communication", "Analysis", "Problem-solving"],
         needsSkills: ["Marketing", "Sales", "Financial planning"],
-        developingSkills: ["Leadership", "Delegation", "Strategic planning"],
+        developingSkills: ["Leadership", "Delegation", "Strategic planning"]
       },
       alternativeReasons: [
         "Offers similar income potential with different approach",
         "Good backup option for diversification",
-        "Could complement your main business",
+        "Could complement your main business"
       ],
       avoidReasons: [
         "Doesn't align with your core strengths",
         "Time commitment doesn't match availability",
-        "Risk level exceeds comfort zone",
-      ],
+        "Risk level exceeds comfort zone"
+      ]
     };
   };
 
@@ -557,20 +509,14 @@ const FullReport: React.FC<FullReportProps> = ({
   // Email functionality
   const handleEmailResults = async () => {
     try {
-      const subject = encodeURIComponent(
-        `Your Complete Business Path Report - ${topPath.name}`,
-      );
-      const body = encodeURIComponent(
-        `Hi there!\n\nYour complete business path analysis is ready!\n\nTop Match: ${topPath.name} (${topPath.fitScore}% fit)\n\nView your full report: ${window.location.href}\n\nBest regards,\nBusiness Path Team`,
-      );
+      const subject = encodeURIComponent(`Your Complete Business Path Report - ${topPath.name}`);
+      const body = encodeURIComponent(`Hi there!\n\nYour complete business path analysis is ready!\n\nTop Match: ${topPath.name} (${topPath.fitScore}% fit)\n\nView your full report: ${window.location.href}\n\nBest regards,\nBusiness Path Team`);
 
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
-      alert(
-        "Email client opened! Your full report has been prepared for sending.",
-      );
+      alert('Email client opened! Your full report has been prepared for sending.');
     } catch (error) {
-      console.error("Error opening email client:", error);
-      alert("Unable to open email client. Please copy the URL manually.");
+      console.error('Error opening email client:', error);
+      alert('Unable to open email client. Please copy the URL manually.');
     }
   };
 
@@ -599,38 +545,35 @@ PERSONALITY ANALYSIS:
 - Motivation: ${Math.round(traitScores.motivation * 100)}%
 
 TOP BENEFITS:
-${topPath.pros.map((pro, i) => `${i + 1}. ${pro}`).join("\n")}
+${topPath.pros.map((pro, i) => `${i + 1}. ${pro}`).join('\n')}
 
 POTENTIAL CHALLENGES:
-${topPath.cons.map((con, i) => `${i + 1}. ${con}`).join("\n")}
+${topPath.cons.map((con, i) => `${i + 1}. ${con}`).join('\n')}
 
 REQUIRED SKILLS:
-${topPath.skills.join(", ")}
+${topPath.skills.join(', ')}
 
 OTHER TOP MATCHES:
-${allPaths
-  .slice(1, 4)
-  .map((path, i) => `${i + 2}. ${path.name} (${path.fitScore}% fit)`)
-  .join("\n")}
+${allPaths.slice(1, 4).map((path, i) => `${i + 2}. ${path.name} (${path.fitScore}% fit)`).join('\n')}
 
 Generated on: ${new Date().toLocaleDateString()}
 Business Path Platform - Complete Analysis Report
       `;
 
-      const blob = new Blob([reportText], { type: "text/plain" });
+      const blob = new Blob([reportText], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.download = `complete-business-path-report-${topPath.name.toLowerCase().replace(/\s+/g, "-")}.txt`;
+      link.download = `complete-business-path-report-${topPath.name.toLowerCase().replace(/\s+/g, '-')}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      alert("Your complete report has been downloaded successfully!");
+      alert('Your complete report has been downloaded successfully!');
     } catch (error) {
-      console.error("Error downloading report:", error);
-      alert("Unable to download report. Please try again.");
+      console.error('Error downloading report:', error);
+      alert('Unable to download report. Please try again.');
     }
   };
 
@@ -640,35 +583,33 @@ Business Path Platform - Complete Analysis Report
       const shareData = {
         title: `My Complete Business Path Report - ${topPath.name}`,
         text: `I just got my complete business analysis! ${topPath.name} is a ${topPath.fitScore}% fit for my entrepreneurial goals.`,
-        url: window.location.href,
+        url: window.location.href
       };
 
       if (navigator.share) {
         await navigator.share(shareData);
-        alert("Report shared successfully!");
+        alert('Report shared successfully!');
       } else {
         const shareText = `${shareData.text}\n\nSee my complete report: ${shareData.url}`;
         await navigator.clipboard.writeText(shareText);
-        alert("Share text copied to clipboard!");
+        alert('Share text copied to clipboard!');
       }
     } catch (error) {
-      console.error("Error sharing report:", error);
+      console.error('Error sharing report:', error);
 
       const shareText = `Check out my complete business path report! ${topPath.name} is a ${topPath.fitScore}% fit for me. ${window.location.href}`;
 
-      const shareModal = confirm(
-        `Share your complete report?\n\nTwitter: Click OK to share on Twitter\nCancel: Copy link to clipboard`,
-      );
+      const shareModal = confirm(`Share your complete report?\n\nTwitter: Click OK to share on Twitter\nCancel: Copy link to clipboard`);
 
       if (shareModal) {
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-        window.open(twitterUrl, "_blank");
+        window.open(twitterUrl, '_blank');
       } else {
         try {
           await navigator.clipboard.writeText(shareText);
-          alert("Share link copied to clipboard!");
+          alert('Share link copied to clipboard!');
         } catch (clipboardError) {
-          alert("Unable to share. Please copy the URL manually.");
+          alert('Unable to share. Please copy the URL manually.');
         }
       }
     }
@@ -700,9 +641,7 @@ Business Path Platform - Complete Analysis Report
                 Back to Results
               </button>
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-gray-900">
-                  Your Full Report
-                </h2>
+                <h2 className="text-lg font-bold text-gray-900">Your Full Report</h2>
                 <button
                   onClick={toggleSidebar}
                   className="text-gray-500 hover:text-gray-700 transition-colors p-1"
@@ -722,8 +661,8 @@ Business Path Platform - Complete Analysis Report
                     onClick={() => handleSectionClick(section.id)}
                     className={`w-full flex items-center px-4 py-3 text-left rounded-lg mb-2 transition-colors ${
                       activeSection === section.id
-                        ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700"
-                        : "text-gray-700 hover:bg-gray-50"
+                        ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     <IconComponent className="h-5 w-5 mr-3" />
@@ -757,13 +696,11 @@ Business Path Platform - Complete Analysis Report
       )}
 
       {/* Main Content */}
-      <div
-        className={`${showSidebar ? "ml-64" : "ml-0"} flex-1 transition-all duration-300`}
-      >
+      <div className={`${showSidebar ? 'ml-64' : 'ml-0'} flex-1 transition-all duration-300`}>
         {/* Welcome Section - Increased top padding */}
         <section
           className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-700 to-indigo-800 text-white"
-          style={{ paddingTop: "10vh", paddingBottom: "15vh" }}
+          style={{ paddingTop: '10vh', paddingBottom: '15vh' }}
         >
           <div className="text-center max-w-4xl mx-auto px-8">
             <motion.div
@@ -780,9 +717,7 @@ Business Path Platform - Complete Analysis Report
               </h1>
 
               <p className="text-xl md:text-2xl text-blue-100 mb-16 leading-relaxed">
-                Your personalized business blueprint is ready. Discover your
-                AI-powered analysis, personality insights, and complete roadmap
-                to success.
+                Your personalized business blueprint is ready. Discover your AI-powered analysis, personality insights, and complete roadmap to success.
               </p>
             </motion.div>
           </div>
@@ -792,23 +727,14 @@ Business Path Platform - Complete Analysis Report
         <section className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Your AI-Generated Analysis
-              </h2>
-              <p className="text-xl text-gray-600">
-                Personalized insights based on your unique profile
-              </p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Your AI-Generated Analysis</h2>
+              <p className="text-xl text-gray-600">Personalized insights based on your unique profile</p>
             </div>
+
             {/* Personality Sliders */}
-            className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl
-            p-8 mb-16"
-            <div
               className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 mb-16"
-              id="personality"
-            >
-              <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-                Your Personality Snapshot
-              </h3>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 mb-16" id="personality">
+              <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Your Personality Snapshot</h3>
               <div className="grid md:grid-cols-2 gap-8">
                 {traitSliders.map((slider, index) => (
                   <TraitSlider
@@ -821,23 +747,22 @@ Business Path Platform - Complete Analysis Report
                 ))}
               </div>
             </div>
+
             {/* Together, these traits heading */}
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-gray-900">
-                Together, these traits make you best suited for {topPath.name}.
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-900">Together, these traits make you best suited for {topPath.name}.</h3>
             </div>
+
             {/* Why This Business Model Fits */}
             {aiInsights && (
               <div className="bg-blue-50 rounded-2xl p-8 mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Why {topPath.name} Is Best For You
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Why {topPath.name} Is Best For You</h3>
                 <div className="prose prose-lg max-w-none text-gray-700">
                   <p>{aiInsights.whyThisFits}</p>
                 </div>
               </div>
             )}
+
             {/* Get Started Button */}
             <div className="text-center mb-16">
               <button
@@ -849,6 +774,7 @@ Business Path Platform - Complete Analysis Report
                 <ArrowRight className="ml-3 h-5 w-5" />
               </button>
             </div>
+
             {/* Strengths and Weaknesses */}
             {aiInsights && (
               <div className="grid md:grid-cols-2 gap-8 mb-16">
@@ -858,14 +784,12 @@ Business Path Platform - Complete Analysis Report
                     Your Strengths
                   </h3>
                   <ul className="space-y-3">
-                    {aiInsights.strengthsWeaknesses.strengths.map(
-                      (strength, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                          <span className="text-green-700">{strength}</span>
-                        </li>
-                      ),
-                    )}
+                    {aiInsights.strengthsWeaknesses.strengths.map((strength, index) => (
+                      <li key={index} className="flex items-start">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span className="text-green-700">{strength}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
@@ -875,14 +799,12 @@ Business Path Platform - Complete Analysis Report
                     Areas to Develop
                   </h3>
                   <ul className="space-y-3">
-                    {aiInsights.strengthsWeaknesses.weaknesses.map(
-                      (weakness, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                          <span className="text-orange-700">{weakness}</span>
-                        </li>
-                      ),
-                    )}
+                    {aiInsights.strengthsWeaknesses.weaknesses.map((weakness, index) => (
+                      <li key={index} className="flex items-start">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span className="text-orange-700">{weakness}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -893,9 +815,7 @@ Business Path Platform - Complete Analysis Report
         {/* Business Overview Section */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-6xl mx-auto px-8">
-            <h2 className="text-4xl font-bold text-gray-900 mb-16 text-center">
-              {topPath.name} Deep Dive
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-16 text-center">{topPath.name} Deep Dive</h2>
 
             {/* Income Graph and Description */}
             <div className="grid lg:grid-cols-2 gap-12 mb-16">
@@ -903,9 +823,7 @@ Business Path Platform - Complete Analysis Report
                 <IncomeGraph businessModel={topPath.name} />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  About {topPath.name}
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">About {topPath.name}</h3>
                 <div className="prose prose-lg text-gray-700">
                   <p>{topPath.detailedDescription}</p>
                 </div>
@@ -931,12 +849,8 @@ Business Path Platform - Complete Analysis Report
                     <div
                       className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full"
                       style={{
-                        width:
-                          topPath.difficulty === "Easy"
-                            ? "90%"
-                            : topPath.difficulty === "Medium"
-                              ? "70%"
-                              : "50%",
+                        width: topPath.difficulty === 'Easy' ? '90%' :
+                               topPath.difficulty === 'Medium' ? '70%' : '50%'
                       }}
                     />
                   </div>
@@ -948,45 +862,16 @@ Business Path Platform - Complete Analysis Report
             {/* Key Metrics */}
             <div className="grid md:grid-cols-4 gap-6 mb-16">
               {[
-                {
-                  icon: Clock,
-                  title: "Time to Start",
-                  value: topPath.timeToProfit,
-                  color: "blue",
-                },
-                {
-                  icon: DollarSign,
-                  title: "Initial Investment",
-                  value: topPath.startupCost,
-                  color: "green",
-                },
-                {
-                  icon: TrendingUp,
-                  title: "Potential Income",
-                  value: topPath.potentialIncome,
-                  color: "purple",
-                },
-                {
-                  icon: Zap,
-                  title: "Time Commitment",
-                  value: "15-30 hrs/week",
-                  color: "orange",
-                },
+                { icon: Clock, title: 'Time to Start', value: topPath.timeToProfit, color: 'blue' },
+                { icon: DollarSign, title: 'Initial Investment', value: topPath.startupCost, color: 'green' },
+                { icon: TrendingUp, title: 'Potential Income', value: topPath.potentialIncome, color: 'purple' },
+                { icon: Zap, title: 'Time Commitment', value: '15-30 hrs/week', color: 'orange' }
               ].map((metric, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl p-6 shadow-lg text-center"
-                >
-                  <div
-                    className={`w-12 h-12 bg-${metric.color}-100 rounded-full flex items-center justify-center mx-auto mb-4`}
-                  >
-                    <metric.icon
-                      className={`h-6 w-6 text-${metric.color}-600`}
-                    />
+                <div key={index} className="bg-white rounded-2xl p-6 shadow-lg text-center">
+                  <div className={`w-12 h-12 bg-${metric.color}-100 rounded-full flex items-center justify-center mx-auto mb-4`}>
+                    <metric.icon className={`h-6 w-6 text-${metric.color}-600`} />
                   </div>
-                  <h4 className="font-semibold text-gray-900 mb-2">
-                    {metric.title}
-                  </h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">{metric.title}</h4>
                   <p className="text-gray-700 font-medium">{metric.value}</p>
                 </div>
               ))}
@@ -1030,9 +915,7 @@ Business Path Platform - Complete Analysis Report
             {/* Struggles and Solutions */}
             {aiInsights && (
               <div className="bg-yellow-50 rounded-2xl p-8 mb-16">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Challenges You May Face
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Challenges You May Face</h3>
                 <div className="prose prose-lg max-w-none text-gray-700">
                   <p>{aiInsights.strugglesAndSolutions}</p>
                 </div>
@@ -1042,59 +925,36 @@ Business Path Platform - Complete Analysis Report
             {/* Skills Assessment */}
             {aiInsights && (
               <div className="mb-16">
-                <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-                  Required Skills Assessment
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Required Skills Assessment</h3>
                 <div className="grid md:grid-cols-3 gap-8">
                   <div>
-                    <h4 className="font-semibold text-green-800 mb-4">
-                      ✅ Skills You Have
-                    </h4>
+                    <h4 className="font-semibold text-green-800 mb-4">✅ Skills You Have</h4>
                     <div className="flex flex-wrap gap-2">
-                      {aiInsights.skillsAssessment.hasSkills.map(
-                        (skill, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
-                          >
-                            {skill}
-                          </span>
-                        ),
-                      )}
+                      {aiInsights.skillsAssessment.hasSkills.map((skill, index) => (
+                        <span key={index} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                          {skill}
+                        </span>
+                      ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-orange-800 mb-4">
-                      🔄 Skills to Develop
-                    </h4>
+                    <h4 className="font-semibold text-orange-800 mb-4">🔄 Skills to Develop</h4>
                     <div className="flex flex-wrap gap-2">
-                      {aiInsights.skillsAssessment.developingSkills.map(
-                        (skill, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm"
-                          >
-                            {skill}
-                          </span>
-                        ),
-                      )}
+                      {aiInsights.skillsAssessment.developingSkills.map((skill, index) => (
+                        <span key={index} className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">
+                          {skill}
+                        </span>
+                      ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-red-800 mb-4">
-                      📚 Skills to Learn
-                    </h4>
+                    <h4 className="font-semibold text-red-800 mb-4">📚 Skills to Learn</h4>
                     <div className="flex flex-wrap gap-2">
-                      {aiInsights.skillsAssessment.needsSkills.map(
-                        (skill, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm"
-                          >
-                            {skill}
-                          </span>
-                        ),
-                      )}
+                      {aiInsights.skillsAssessment.needsSkills.map((skill, index) => (
+                        <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
+                          {skill}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -1120,36 +980,21 @@ Business Path Platform - Complete Analysis Report
             <div className="grid lg:grid-cols-2 gap-16">
               {/* Best Other Options */}
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                  Your Best Other Options
-                </h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Best Other Options</h2>
                 <div className="space-y-8">
                   {otherBestPaths.map((path, index) => (
                     <div key={path.id} className="bg-gray-50 rounded-2xl p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">
-                            {path.name}
-                          </h3>
-                          <div className="text-blue-600 font-semibold mb-3">
-                            {path.fitScore}% Match
-                          </div>
-                          <p className="text-gray-600 mb-4">
-                            {path.description}
-                          </p>
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">{path.name}</h3>
+                          <div className="text-blue-600 font-semibold mb-3">{path.fitScore}% Match</div>
+                          <p className="text-gray-600 mb-4">{path.description}</p>
                         </div>
                       </div>
                       {aiInsights && (
                         <div className="bg-white rounded-lg p-4 mb-4">
                           <p className="text-gray-700 text-sm">
-                            This business model is your{" "}
-                            {index === 0
-                              ? "second"
-                              : index === 1
-                                ? "third"
-                                : "fourth"}{" "}
-                            best fit after {topPath.name}.{" "}
-                            {aiInsights.alternativeReasons[0]}
+                            This business model is your {index === 0 ? 'second' : index === 1 ? 'third' : 'fourth'} best fit after {topPath.name}. {aiInsights.alternativeReasons[0]}
                           </p>
                         </div>
                       )}
@@ -1167,31 +1012,22 @@ Business Path Platform - Complete Analysis Report
 
               {/* What to Avoid */}
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-8">
-                  What You Shouldn't Choose
-                </h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">What You Shouldn't Choose</h2>
 
                 <div className="space-y-8">
                   {worstPaths.map((path, index) => (
                     <div key={path.id} className="bg-red-50 rounded-2xl p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">
-                            {path.name}
-                          </h3>
-                          <div className="text-red-600 font-semibold mb-3">
-                            {path.fitScore}% Match
-                          </div>
-                          <p className="text-gray-600 mb-4">
-                            {path.description}
-                          </p>
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">{path.name}</h3>
+                          <div className="text-red-600 font-semibold mb-3">{path.fitScore}% Match</div>
+                          <p className="text-gray-600 mb-4">{path.description}</p>
                         </div>
                       </div>
                       {aiInsights && (
                         <div className="bg-white rounded-lg p-4 mb-4">
                           <p className="text-gray-700 text-sm">
-                            You should avoid this business model because{" "}
-                            {aiInsights.avoidReasons[0]}
+                            You should avoid this business model because {aiInsights.avoidReasons[0]}
                           </p>
                         </div>
                       )}
@@ -1213,12 +1049,9 @@ Business Path Platform - Complete Analysis Report
         {/* Actions Section */}
         <section className="py-20 bg-gray-50">
           <div className="max-w-4xl mx-auto px-8 text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-8">
-              Take Action on Your Results
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-8">Take Action on Your Results</h2>
             <p className="text-xl text-gray-600 mb-12">
-              Your personalized business blueprint is complete. Now it's time to
-              turn insights into action.
+              Your personalized business blueprint is complete. Now it's time to turn insights into action.
             </p>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -1227,12 +1060,8 @@ Business Path Platform - Complete Analysis Report
                 className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Download className="h-8 w-8 text-blue-600 mx-auto mb-4" />
-                <h3 className="font-bold text-gray-900 mb-2">
-                  Download as PDF
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Get your complete report as a PDF for offline reference
-                </p>
+                <h3 className="font-bold text-gray-900 mb-2">Download as PDF</h3>
+                <p className="text-gray-600 text-sm">Get your complete report as a PDF for offline reference</p>
               </button>
 
               <button
@@ -1240,12 +1069,8 @@ Business Path Platform - Complete Analysis Report
                 className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Mail className="h-8 w-8 text-green-600 mx-auto mb-4" />
-                <h3 className="font-bold text-gray-900 mb-2">
-                  Email My Results
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Send this report to your email for easy access
-                </p>
+                <h3 className="font-bold text-gray-900 mb-2">Email My Results</h3>
+                <p className="text-gray-600 text-sm">Send this report to your email for easy access</p>
               </button>
 
               <button
@@ -1253,12 +1078,8 @@ Business Path Platform - Complete Analysis Report
                 className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Share2 className="h-8 w-8 text-purple-600 mx-auto mb-4" />
-                <h3 className="font-bold text-gray-900 mb-2">
-                  Share My Results
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Share your business match with friends and mentors
-                </p>
+                <h3 className="font-bold text-gray-900 mb-2">Share My Results</h3>
+                <p className="text-gray-600 text-sm">Share your business match with friends and mentors</p>
               </button>
             </div>
           </div>
@@ -1271,10 +1092,8 @@ Business Path Platform - Complete Analysis Report
 // Helper functions to calculate trait scores
 function calculateSocialComfort(data: QuizData): number {
   let score = 0.5;
-  if (data.directCommunicationEnjoyment)
-    score = (data.directCommunicationEnjoyment - 1) / 4;
-  if (data.brandFaceComfort)
-    score = Math.max(score, (data.brandFaceComfort - 1) / 4);
+  if (data.directCommunicationEnjoyment) score = (data.directCommunicationEnjoyment - 1) / 4;
+  if (data.brandFaceComfort) score = Math.max(score, (data.brandFaceComfort - 1) / 4);
   return Math.max(0, Math.min(1, score));
 }
 
@@ -1300,17 +1119,16 @@ function calculateMotivation(data: QuizData): number {
 }
 
 function calculateFeedbackResilience(data: QuizData): number {
-  if (data.feedbackRejectionResponse)
-    return (data.feedbackRejectionResponse - 1) / 4;
+  if (data.feedbackRejectionResponse) return (data.feedbackRejectionResponse - 1) / 4;
   return 0.5;
 }
 
 function calculateStructurePreference(data: QuizData): number {
   let score = 0.5;
-  if (data.workStructurePreference === "clear-steps") score = 0.9;
-  else if (data.workStructurePreference === "some-structure") score = 0.7;
-  else if (data.workStructurePreference === "mostly-flexible") score = 0.3;
-  else if (data.workStructurePreference === "total-freedom") score = 0.1;
+  if (data.workStructurePreference === 'clear-steps') score = 0.9;
+  else if (data.workStructurePreference === 'some-structure') score = 0.7;
+  else if (data.workStructurePreference === 'mostly-flexible') score = 0.3;
+  else if (data.workStructurePreference === 'total-freedom') score = 0.1;
   return 1 - score; // Invert so high score means works freely
 }
 
@@ -1321,10 +1139,8 @@ function calculateCreativity(data: QuizData): number {
 
 function calculateCommunicationConfidence(data: QuizData): number {
   let score = 0.5;
-  if (data.directCommunicationEnjoyment)
-    score = (data.directCommunicationEnjoyment - 1) / 4;
-  if (data.brandFaceComfort)
-    score = Math.max(score, (data.brandFaceComfort - 1) / 4);
+  if (data.directCommunicationEnjoyment) score = (data.directCommunicationEnjoyment - 1) / 4;
+  if (data.brandFaceComfort) score = Math.max(score, (data.brandFaceComfort - 1) / 4);
   return score;
 }
 

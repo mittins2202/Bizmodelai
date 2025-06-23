@@ -536,16 +536,8 @@ const FullReport: React.FC<FullReportProps> = ({
     };
   };
 
-  const scrollToSection = (sectionId: string) => {
+  const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  const scrollToAIReport = () => {
-    scrollToSection("ai-report");
   };
 
   const handleLearnMoreAboutBusiness = (path: BusinessPath) => {

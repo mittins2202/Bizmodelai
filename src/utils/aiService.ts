@@ -101,6 +101,12 @@ export class AIService {
     topPath: BusinessPath,
   ): Promise<AIAnalysis> {
     try {
+      // If OpenAI is not available, use fallback immediately
+      if (!openai) {
+        console.log("OpenAI API key not configured, using fallback analysis");
+        return this.generateFallbackAnalysis(quizData, topPath);
+      }
+
       // Create a comprehensive prompt for detailed analysis
       const prompt = `
 Based on this user's quiz responses and their top business match (${topPath.name}), generate a comprehensive business model analysis.

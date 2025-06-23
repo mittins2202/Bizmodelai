@@ -697,55 +697,149 @@ Business Path Platform - businesspath.com
                           </div>
                         </div>
                       ) : (
-                        // Preview with progressive blur effect
+                        // Preview with progressive blur effect and value proposition columns
                         <div className="relative">
-                          {(() => {
-                            const { firstParagraph, secondParagraph } =
-                              splitAnalysis(aiAnalysis.fullAnalysis);
-                            return (
-                              <>
-                                {/* First paragraph with subtle blur */}
-                                <p className="mb-4 filter blur-[0.5px] opacity-90">
-                                  {firstParagraph}
-                                </p>
+                          {/* Three paragraphs with progressive blur */}
+                          <div className="relative">
+                            {(() => {
+                              const sentences =
+                                aiAnalysis.fullAnalysis.split(". ");
+                              const thirdLength = Math.ceil(
+                                sentences.length / 3,
+                              );
 
-                                {/* Second paragraph with stronger blur */}
-                                <p className="mb-6 filter blur-[2px] opacity-60">
-                                  {secondParagraph}
-                                </p>
-                              </>
-                            );
-                          })()}
+                              const firstParagraph =
+                                sentences.slice(0, thirdLength).join(". ") +
+                                (sentences.length > thirdLength ? "." : "");
+                              const secondParagraph =
+                                sentences
+                                  .slice(thirdLength, thirdLength * 2)
+                                  .join(". ") +
+                                (sentences.length > thirdLength * 2 ? "." : "");
+                              const thirdParagraph = sentences
+                                .slice(thirdLength * 2)
+                                .join(". ");
 
-                          {/* Additional content with maximum blur */}
-                          <div className="filter blur-[3px] opacity-40">
-                            <div className="grid md:grid-cols-2 gap-6 mt-6">
-                              <div>
-                                <h4 className="font-bold mb-3">Key Insights</h4>
-                                <div className="space-y-2">
-                                  {aiAnalysis.keyInsights
-                                    .slice(0, 2)
-                                    .map((_, index) => (
-                                      <div
-                                        key={index}
-                                        className="h-4 bg-white/20 rounded"
-                                      ></div>
-                                    ))}
+                              return (
+                                <>
+                                  {/* First paragraph - fully visible */}
+                                  <p className="mb-4 text-blue-50 leading-relaxed">
+                                    {firstParagraph}
+                                  </p>
+
+                                  {/* Second paragraph - start of blur */}
+                                  <p className="mb-4 text-blue-50 leading-relaxed relative">
+                                    {secondParagraph}
+                                  </p>
+
+                                  {/* Third paragraph - more blur */}
+                                  <p className="mb-6 text-blue-50 leading-relaxed relative">
+                                    {thirdParagraph}
+                                  </p>
+                                </>
+                              );
+                            })()}
+
+                            {/* Progressive blur overlay that increases from middle of first paragraph to end */}
+                            <div
+                              className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-purple-600/80 backdrop-blur-sm"
+                              style={{
+                                background:
+                                  "linear-gradient(to bottom, transparent 30%, rgba(147, 51, 234, 0.1) 40%, rgba(147, 51, 234, 0.3) 60%, rgba(147, 51, 234, 0.6) 100%)",
+                                backdropFilter:
+                                  "blur(0px) blur(1px) blur(2px) blur(4px)",
+                              }}
+                            ></div>
+                          </div>
+
+                          {/* Value Proposition Columns - positioned over the blur */}
+                          <div className="relative z-10 mt-8">
+                            <div className="grid md:grid-cols-2 gap-8">
+                              {/* Column 1 */}
+                              <div className="space-y-6">
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">🧠</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Your Business Blueprint
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Discover the exact business model you
+                                      should pursue—tailored to your
+                                      personality, strengths, and goals.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">⚠️</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Models to Avoid
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      See which business paths are poor fits for
+                                      you and why they're likely to lead to
+                                      burnout or failure.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">🚀</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Step-by-Step Launch Guidance
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Learn how to get started with your
+                                      best-fit business model, including tools,
+                                      timelines, and tips.
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                              <div>
-                                <h4 className="font-bold mb-3">
-                                  Success Predictors
-                                </h4>
-                                <div className="space-y-2">
-                                  {aiAnalysis.successPredictors
-                                    .slice(0, 2)
-                                    .map((_, index) => (
-                                      <div
-                                        key={index}
-                                        className="h-4 bg-white/20 rounded"
-                                      ></div>
-                                    ))}
+
+                              {/* Column 2 */}
+                              <div className="space-y-6">
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">💪</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Your Strengths & Blind Spots
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Get a clear breakdown of what you're
+                                      naturally great at—and where you'll need
+                                      support or growth.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">📊</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Income Potential & Market Fit
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Understand how much you can realistically
+                                      earn and how big the opportunity is.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">🛠</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Skills You Need to Succeed
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Find out which skills you already have,
+                                      what to build, and what gaps to close.
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
                             </div>

@@ -927,8 +927,12 @@ Business Path Platform - Complete Analysis Report
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
                   Why {topPath.name} Is Best For You
                 </h3>
-                <div className="prose prose-lg max-w-none text-gray-700">
-                  <p>{aiInsights.whyThisFits}</p>
+                <div className="prose prose-lg max-w-none text-gray-700 space-y-4">
+                  {aiInsights.whyThisFits
+                    .split("\n\n")
+                    .map((paragraph, index) => (
+                      <p key={index}>{paragraph.trim()}</p>
+                    ))}
                 </div>
               </div>
             )}

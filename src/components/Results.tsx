@@ -743,7 +743,7 @@ Business Path Platform - businesspath.com
                           </div>
 
                           {/* Value Proposition Columns - fully visible below faded text */}
-                          <div className="mb-16">
+                          <div className="mb-24">
                             <div className="grid md:grid-cols-2 gap-8">
                               {/* Column 1 */}
                               <div className="space-y-6">

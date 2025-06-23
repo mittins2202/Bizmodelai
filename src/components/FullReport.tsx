@@ -824,8 +824,7 @@ Business Path Platform - Complete Analysis Report
             {/* Together, these traits heading */}
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-gray-900">
-                Together, these traits make you best suited for this business
-                model.
+                Together, these traits make you best suited for {topPath.name}.
               </h3>
             </div>
             {/* Why This Business Model Fits */}

@@ -35,6 +35,8 @@ import { QuizData, BusinessPath, AIAnalysis } from "../types";
 import { generatePersonalizedPaths } from "../utils/quizLogic";
 import { AIService } from "../utils/aiService";
 import FullReport from "./FullReport";
+import { PaywallModal, LockedCardOverlay } from "./PaywallModals";
+import { usePaywall } from "../contexts/PaywallContext";
 
 interface ResultsProps {
   quizData: QuizData;

@@ -1026,16 +1026,18 @@ Business Path Platform - businesspath.com
                         </button>
                       )}
 
-                      {/* Secondary CTA - Centered and positioned below button */}
-                      <div className="text-center">
-                        <button
-                          onClick={() => handleLearnMore(path)}
-                          className="text-gray-700 hover:text-blue-600 transition-colors duration-300 text-sm font-bold flex items-center justify-center group"
-                        >
-                          Learn more about {path.name} for you
-                          <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                        </button>
-                      </div>
+                      {/* Secondary CTA - Only show if card is not locked */}
+                      {!(index > 0 && !hasUnlockedAnalysis) && (
+                        <div className="text-center">
+                          <button
+                            onClick={() => handleLearnMore(path)}
+                            className="text-gray-700 hover:text-blue-600 transition-colors duration-300 text-sm font-bold flex items-center justify-center group"
+                          >
+                            Learn more about {path.name} for you
+                            <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
 

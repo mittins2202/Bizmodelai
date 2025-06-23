@@ -70,8 +70,18 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
   const [isGeneratingAI, setIsGeneratingAI] = useState(true);
   const [showAIInsights, setShowAIInsights] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
-  const [hasUnlockedAnalysis, setHasUnlockedAnalysis] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paywallType, setPaywallType] = useState<
+    "business-model" | "learn-more" | "full-report"
+  >("business-model");
+
+  const {
+    hasUnlockedAnalysis,
+    hasCompletedQuiz,
+    setHasUnlockedAnalysis,
+    setHasCompletedQuiz,
+    canAccessFullReport,
+  } = usePaywall();
 
   useEffect(() => {
     console.log("Results component received quizData:", quizData);

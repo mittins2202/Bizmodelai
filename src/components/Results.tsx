@@ -89,9 +89,12 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
     console.log("Generated paths:", paths);
     setPersonalizedPaths(paths);
 
+    // Mark quiz as completed
+    setHasCompletedQuiz(true);
+
     // Generate AI insights and analysis
     generateAIContent(paths);
-  }, [quizData]);
+  }, [quizData, setHasCompletedQuiz]);
 
   const generateAIContent = async (paths: BusinessPath[]) => {
     try {

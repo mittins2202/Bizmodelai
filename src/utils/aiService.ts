@@ -184,6 +184,11 @@ Write in an engaging, personalized tone as if speaking directly to them.
     maxTokens: number = 200,
     temperature: number = 0.7,
   ): Promise<string> {
+    // If OpenAI is not available, throw an error to trigger fallback
+    if (!openai) {
+      throw new Error("OpenAI API key not configured");
+    }
+
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",

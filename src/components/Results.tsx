@@ -912,6 +912,8 @@ Business Path Platform - businesspath.com
                     }}
                   />
                 )}
+
+                {/* Ranking bubbles */}
                 {index === 0 && (
                   <motion.div
                     className="absolute -top-4 left-1/2 transform -translate-x-1/2"
@@ -922,6 +924,32 @@ Business Path Platform - businesspath.com
                     <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
                       <Star className="h-4 w-4 mr-2" />
                       AI RECOMMENDED
+                    </div>
+                  </motion.div>
+                )}
+                {index === 1 && (
+                  <motion.div
+                    className="absolute -top-4 left-1/2 transform -translate-x-1/2"
+                    initial={{ scale: 0, rotate: -10 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.6, delay: 0.9 }}
+                  >
+                    <div className="bg-gradient-to-r from-gray-400 to-gray-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      2nd Best
+                    </div>
+                  </motion.div>
+                )}
+                {index === 2 && (
+                  <motion.div
+                    className="absolute -top-4 left-1/2 transform -translate-x-1/2"
+                    initial={{ scale: 0, rotate: -10 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.6, delay: 1.0 }}
+                  >
+                    <div className="bg-gradient-to-r from-slate-400 to-slate-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      3rd Best
                     </div>
                   </motion.div>
                 )}

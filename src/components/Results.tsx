@@ -605,6 +605,76 @@ Business Path Platform - businesspath.com
                               </ul>
                             </div>
                           </div>
+
+                          {/* Business Info Boxes */}
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                              <div className="text-2xl mb-2">⏱️</div>
+                              <div className="text-xs text-blue-200 mb-1">
+                                Time to Start
+                              </div>
+                              <div className="font-bold text-sm">
+                                {personalizedPaths[0]?.timeToProfit ||
+                                  "3-6 months"}
+                              </div>
+                            </div>
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                              <div className="text-2xl mb-2">💰</div>
+                              <div className="text-xs text-blue-200 mb-1">
+                                Initial Investment
+                              </div>
+                              <div className="font-bold text-sm">
+                                {personalizedPaths[0]?.startupCost || "$0-500"}
+                              </div>
+                            </div>
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                              <div className="text-2xl mb-2">📈</div>
+                              <div className="text-xs text-blue-200 mb-1">
+                                Potential Income
+                              </div>
+                              <div className="font-bold text-sm">
+                                {personalizedPaths[0]?.potentialIncome ||
+                                  "$2K-10K/mo"}
+                              </div>
+                            </div>
+                            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                              <div className="text-2xl mb-2">🕒</div>
+                              <div className="text-xs text-blue-200 mb-1">
+                                Time Commitment
+                              </div>
+                              <div className="font-bold text-sm">
+                                {quizData.weeklyTimeCommitment || "10-20"}{" "}
+                                hrs/week
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* CTAs - Only show when unlocked */}
+                          <div className="mt-8 space-y-4">
+                            <button
+                              onClick={() =>
+                                handleViewFullReport(personalizedPaths[0])
+                              }
+                              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
+                            >
+                              <FileText className="h-5 w-5 mr-2 inline" />
+                              View Full Report
+                            </button>
+
+                            <div className="text-center">
+                              <button
+                                onClick={() =>
+                                  handleLearnMore(personalizedPaths[0])
+                                }
+                                className="text-blue-100 hover:text-white font-medium text-lg transition-all duration-300 inline-flex items-center group"
+                              >
+                                <span>
+                                  Get started with {personalizedPaths[0]?.name}
+                                </span>
+                                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       ) : (
                         // Preview with progressive blur effect

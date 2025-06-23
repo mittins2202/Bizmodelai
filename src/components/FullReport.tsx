@@ -262,6 +262,7 @@ const FullReport: React.FC<FullReportProps> = ({
   const [aiInsights, setAiInsights] = useState<AIInsights | null>(null);
   const [isGeneratingAI, setIsGeneratingAI] = useState(true);
   const [showNav, setShowNav] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const navigate = useNavigate();
 

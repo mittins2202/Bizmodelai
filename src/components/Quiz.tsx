@@ -1,8 +1,36 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Brain, DollarSign, Clock, Heart, Users, Award, Briefcase, Calendar, BookOpen, TrendingUp, Compass, MessageCircle, Zap, Star, Wallet, GraduationCap, Package, Monitor, ArrowRight, Target, Lightbulb, ArrowLeft, AlertTriangle, X, Check } from 'lucide-react';
-import { QuizData } from '../types';
-import { quizSteps } from '../data/quizSteps';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Brain,
+  DollarSign,
+  Clock,
+  Heart,
+  Users,
+  Award,
+  Briefcase,
+  Calendar,
+  BookOpen,
+  TrendingUp,
+  Compass,
+  MessageCircle,
+  Zap,
+  Star,
+  Wallet,
+  GraduationCap,
+  Package,
+  Monitor,
+  ArrowRight,
+  Target,
+  Lightbulb,
+  ArrowLeft,
+  AlertTriangle,
+  X,
+  Check,
+} from "lucide-react";
+import { QuizData } from "../types";
+import { quizSteps } from "../data/quizSteps";
 
 interface QuizProps {
   onComplete: (data: QuizData) => void;
@@ -35,7 +63,7 @@ const iconMap = {
   Package,
   Monitor,
   Target,
-  Lightbulb
+  Lightbulb,
 };
 
 // Define the rounds with their question ranges - ALL BLUE/PURPLE THEME
@@ -43,32 +71,35 @@ const rounds = [
   {
     id: 1,
     title: "Motivation & Vision",
-    subtitle: "These questions focus on your goals, desired outcomes, and long-term vision.",
+    subtitle:
+      "These questions focus on your goals, desired outcomes, and long-term vision.",
     icon: Heart,
     color: "from-blue-600 via-purple-600 to-indigo-600",
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [0, 7], // Q1-Q8 (0-indexed)
-    totalQuestions: 8
+    totalQuestions: 8,
   },
   {
     id: 2,
-    title: "Time, Effort & Learning Style", 
-    subtitle: "These questions explore your availability, consistency, and how you like to learn.",
+    title: "Time, Effort & Learning Style",
+    subtitle:
+      "These questions explore your availability, consistency, and how you like to learn.",
     icon: Clock,
     color: "from-blue-600 via-purple-600 to-indigo-600",
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [8, 20], // Q9-Q21 (0-indexed)
-    totalQuestions: 13
+    totalQuestions: 13,
   },
   {
     id: 3,
     title: "Personality & Preferences",
-    subtitle: "This section will help uncover your style, strengths, and working preferences.",
+    subtitle:
+      "This section will help uncover your style, strengths, and working preferences.",
     icon: Users,
     color: "from-blue-600 via-purple-600 to-indigo-600",
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [21, 25], // Q22-Q26 (0-indexed)
-    totalQuestions: 5
+    totalQuestions: 5,
   },
   {
     id: 4,
@@ -76,34 +107,40 @@ const rounds = [
     subtitle: "Now we'll look at your environment and access to key tools.",
     icon: Monitor,
     color: "from-blue-600 via-purple-600 to-indigo-600",
-    bgColor: "from-blue-50 to-purple-50", 
+    bgColor: "from-blue-50 to-purple-50",
     questionRange: [26, 30], // Q27-Q31 (0-indexed)
-    totalQuestions: 5
+    totalQuestions: 5,
   },
   {
     id: 5,
     title: "Strategy & Decision-Making",
-    subtitle: "These questions dig into your strategic preferences and mindset.",
+    subtitle:
+      "These questions dig into your strategic preferences and mindset.",
     icon: Brain,
     color: "from-blue-600 via-purple-600 to-indigo-600",
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [31, 35], // Q32-Q36 (0-indexed)
-    totalQuestions: 5
+    totalQuestions: 5,
   },
   {
     id: 6,
-    title: "Business Model Fit Filters", 
-    subtitle: "Final stretch. These questions will help filter your best-fit business paths.",
+    title: "Business Model Fit Filters",
+    subtitle:
+      "Final stretch. These questions will help filter your best-fit business paths.",
     icon: Target,
     color: "from-blue-600 via-purple-600 to-indigo-600",
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [36, 44], // Q37-Q45 (0-indexed)
-    totalQuestions: 9
-  }
+    totalQuestions: 9,
+  },
 ];
 
 // Exit Warning Modal Component
-const ExitWarningModal: React.FC<ExitWarningModalProps> = ({ isOpen, onClose, onConfirmExit }) => {
+const ExitWarningModal: React.FC<ExitWarningModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirmExit,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -125,7 +162,7 @@ const ExitWarningModal: React.FC<ExitWarningModalProps> = ({ isOpen, onClose, on
         >
           {/* Background decoration */}
           <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50"></div>
-          
+
           <div className="relative p-12 py-16">
             {/* Close button */}
             <button
@@ -158,18 +195,21 @@ const ExitWarningModal: React.FC<ExitWarningModalProps> = ({ isOpen, onClose, on
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
                 Are you sure you want to exit?
               </h2>
-              
+
               <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
                 <p className="text-lg font-semibold text-red-800 mb-2">
                   ⚠️ You will lose all progress!
                 </p>
                 <p className="text-red-700">
-                  You'll need to restart the entire quiz from the beginning to get your personalized business recommendations.
+                  You'll need to restart the entire quiz from the beginning to
+                  get your personalized business recommendations.
                 </p>
               </div>
 
               <p className="text-gray-600 leading-relaxed">
-                The quiz takes 10-15 minutes to complete and provides valuable insights about your perfect business match. Are you sure you want to lose your progress?
+                The quiz takes 10-15 minutes to complete and provides valuable
+                insights about your perfect business match. Are you sure you
+                want to lose your progress?
               </p>
             </motion.div>
 
@@ -187,7 +227,7 @@ const ExitWarningModal: React.FC<ExitWarningModalProps> = ({ isOpen, onClose, on
               >
                 Continue Quiz
               </button>
-              
+
               {/* Exit Quiz Button (Secondary) */}
               <button
                 onClick={onConfirmExit}
@@ -205,7 +245,8 @@ const ExitWarningModal: React.FC<ExitWarningModalProps> = ({ isOpen, onClose, on
               className="text-center mt-8"
             >
               <p className="text-sm text-gray-500">
-                💡 Tip: Your results will be personalized based on all your answers
+                💡 Tip: Your results will be personalized based on all your
+                answers
               </p>
             </motion.div>
           </div>
@@ -225,23 +266,29 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
   // Get current round info
   const getCurrentRound = () => {
-    return rounds.find(round => 
-      currentStep >= round.questionRange[0] && currentStep <= round.questionRange[1]
-    ) || rounds[0];
+    return (
+      rounds.find(
+        (round) =>
+          currentStep >= round.questionRange[0] &&
+          currentStep <= round.questionRange[1],
+      ) || rounds[0]
+    );
   };
 
   const handleNext = async () => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
-    
+
     if (currentStep < quizSteps.length - 1) {
       const nextStep = currentStep + 1;
       const currentRoundInfo = getCurrentRound();
-      const nextRoundInfo = rounds.find(round => 
-        nextStep >= round.questionRange[0] && nextStep <= round.questionRange[1]
+      const nextRoundInfo = rounds.find(
+        (round) =>
+          nextStep >= round.questionRange[0] &&
+          nextStep <= round.questionRange[1],
       );
-      
+
       // Check if we're moving to a new round
       if (nextRoundInfo && nextRoundInfo.id !== currentRoundInfo.id) {
         setCurrentRound(nextRoundInfo.id);
@@ -256,7 +303,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       }
     } else {
       setTimeout(() => {
-        console.log('Quiz completed with data:', formData);
+        console.log("Quiz completed with data:", formData);
         onComplete(formData as QuizData);
         setIsAnimating(false);
       }, 300);
@@ -265,16 +312,18 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
   const handlePrevious = async () => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
-    
+
     if (currentStep > 0) {
       const prevStep = currentStep - 1;
       const currentRoundInfo = getCurrentRound();
-      const prevRoundInfo = rounds.find(round => 
-        prevStep >= round.questionRange[0] && prevStep <= round.questionRange[1]
+      const prevRoundInfo = rounds.find(
+        (round) =>
+          prevStep >= round.questionRange[0] &&
+          prevStep <= round.questionRange[1],
       );
-      
+
       // Check if we're moving to a previous round
       if (prevRoundInfo && prevRoundInfo.id !== currentRoundInfo.id) {
         setCurrentRound(prevRoundInfo.id);
@@ -301,7 +350,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     setCurrentRound(1);
     setShowRoundIntro(true);
     setShowExitModal(false);
-    
+
     // Navigate back to home page
     onBack();
   };
@@ -317,44 +366,50 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const handleOptionSelect = (value: any) => {
     const field = quizSteps[currentStep].field;
     const stepType = quizSteps[currentStep].type;
-    
-    if (stepType === 'multiselect') {
+
+    if (stepType === "multiselect") {
       const currentValues = (formData[field] as any[]) || [];
       let newValues;
-      
-      if (value === 'none') {
-        newValues = ['none'];
-      } else if (currentValues.includes('none')) {
+
+      if (value === "none") {
+        newValues = ["none"];
+      } else if (currentValues.includes("none")) {
         newValues = [value];
       } else if (currentValues.includes(value)) {
-        newValues = currentValues.filter(v => v !== value);
+        newValues = currentValues.filter((v) => v !== value);
       } else {
         newValues = [...currentValues, value];
       }
-      
-      setFormData(prev => ({ ...prev, [field]: newValues }));
+
+      setFormData((prev) => ({ ...prev, [field]: newValues }));
     } else {
-      setFormData(prev => ({ ...prev, [field]: value }));
+      setFormData((prev) => ({ ...prev, [field]: value }));
     }
   };
 
   const currentRoundInfo = getCurrentRound();
   const currentStepData = quizSteps[currentStep];
-  const IconComponent = iconMap[currentStepData?.icon as keyof typeof iconMap] || Brain;
+  const IconComponent =
+    iconMap[currentStepData?.icon as keyof typeof iconMap] || Brain;
   const isLastStep = currentStep === quizSteps.length - 1;
-  const canProceed = formData[currentStepData?.field] !== undefined && 
-    (currentStepData?.type !== 'multiselect' || 
-     (Array.isArray(formData[currentStepData?.field]) && (formData[currentStepData?.field] as any[]).length > 0));
+  const canProceed =
+    formData[currentStepData?.field] !== undefined &&
+    (currentStepData?.type !== "multiselect" ||
+      (Array.isArray(formData[currentStepData?.field]) &&
+        (formData[currentStepData?.field] as any[]).length > 0));
 
   // Calculate progress percentage - 0% on question 1, 100% on completion
-  const progressPercentage = currentStep === 0 ? 0 : (currentStep / quizSteps.length) * 100;
+  const progressPercentage =
+    currentStep === 0 ? 0 : (currentStep / quizSteps.length) * 100;
 
   // Round Introduction Page
   if (showRoundIntro) {
     const RoundIcon = currentRoundInfo.icon;
-    
+
     return (
-      <div className={`min-h-screen flex items-center justify-center p-4 bg-gradient-to-br ${currentRoundInfo.bgColor} relative`}>
+      <div
+        className={`min-h-screen flex items-center justify-center p-4 bg-gradient-to-br ${currentRoundInfo.bgColor} relative`}
+      >
         {/* Back Arrow Button - Prominent Position */}
         <motion.button
           onClick={handleBackButtonClick}
@@ -370,18 +425,22 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
         <div className="max-w-4xl w-full">
           {/* Progress Bar */}
-          <motion.div 
+          <motion.div
             className="mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <div className="flex justify-between text-sm text-gray-600 mb-3">
-              <span className="font-medium">Round {currentRoundInfo.id} - Question {currentStep + 1} of 45</span>
-              <span className="font-medium">{Math.round(progressPercentage)}% Complete</span>
+              <span className="font-medium">
+                Round {currentRoundInfo.id} - Question {currentStep + 1} of 45
+              </span>
+              <span className="font-medium">
+                {Math.round(progressPercentage)}% Complete
+              </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-              <motion.div 
+              <motion.div
                 className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 h-3 rounded-full shadow-sm"
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
@@ -398,7 +457,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-100 text-center"
           >
             {/* Round Icon */}
-            <motion.div 
+            <motion.div
               className={`w-24 h-24 bg-gradient-to-br ${currentRoundInfo.color} rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg`}
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -406,9 +465,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             >
               <RoundIcon className="h-12 w-12 text-white" />
             </motion.div>
-            
+
             {/* Round Title */}
-            <motion.h1 
+            <motion.h1
               className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -416,9 +475,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             >
               Round {currentRoundInfo.id}: {currentRoundInfo.title}
             </motion.h1>
-            
+
             {/* Round Subtitle */}
-            <motion.p 
+            <motion.p
               className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -428,7 +487,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             </motion.p>
 
             {/* Round Stats */}
-            <motion.div 
+            <motion.div
               className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-10"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -436,11 +495,15 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             >
               <div className="flex items-center text-gray-500">
                 <MessageCircle className="h-5 w-5 mr-2" />
-                <span className="font-medium">{currentRoundInfo.totalQuestions} Questions</span>
+                <span className="font-medium">
+                  {currentRoundInfo.totalQuestions} Questions
+                </span>
               </div>
               <div className="flex items-center text-gray-500">
                 <Clock className="h-5 w-5 mr-2" />
-                <span className="font-medium">~{Math.ceil(currentRoundInfo.totalQuestions * 0.5)} minutes</span>
+                <span className="font-medium">
+                  ~{Math.ceil(currentRoundInfo.totalQuestions * 0.5)} minutes
+                </span>
               </div>
             </motion.div>
 
@@ -459,7 +522,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             </motion.button>
 
             {/* Navigation Hint */}
-            <motion.p 
+            <motion.p
               className="text-sm text-gray-400 mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -491,18 +554,22 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
       <div className="max-w-4xl w-full">
         {/* Progress Bar */}
-        <motion.div 
+        <motion.div
           className="mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex justify-between text-sm text-gray-600 mb-3">
-            <span className="font-medium">Round {currentRoundInfo.id} - Question {currentStep + 1} of 45</span>
-            <span className="font-medium">{Math.round(progressPercentage)}% Complete</span>
+            <span className="font-medium">
+              Round {currentRoundInfo.id} - Question {currentStep + 1} of 45
+            </span>
+            <span className="font-medium">
+              {Math.round(progressPercentage)}% Complete
+            </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-            <motion.div 
+            <motion.div
               className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 h-3 rounded-full shadow-sm"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
@@ -522,7 +589,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             <div className="text-center mb-8">
-              <motion.div 
+              <motion.div
                 className={`w-20 h-20 bg-gradient-to-br ${currentRoundInfo.color} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -530,8 +597,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               >
                 <IconComponent className="h-10 w-10 text-white" />
               </motion.div>
-              
-              <motion.h2 
+
+              <motion.h2
                 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -539,8 +606,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               >
                 {currentStepData.title}
               </motion.h2>
-              
-              <motion.p 
+
+              <motion.p
                 className="text-lg text-gray-600 max-w-2xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -550,17 +617,21 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               </motion.p>
             </div>
 
-            <motion.div 
+            <motion.div
               className="mb-8"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-              {currentStepData.type === 'scale' ? (
+              {currentStepData.type === "scale" ? (
                 <div className="space-y-6">
                   <div className="flex justify-between items-center px-4">
-                    <span className="text-sm font-medium text-gray-500">Low</span>
-                    <span className="text-sm font-medium text-gray-500">High</span>
+                    <span className="text-sm font-medium text-gray-500">
+                      Low
+                    </span>
+                    <span className="text-sm font-medium text-gray-500">
+                      High
+                    </span>
                   </div>
                   <div className="grid grid-cols-5 gap-3">
                     {currentStepData.options?.map((option, index) => (
@@ -569,28 +640,34 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                         onClick={() => handleOptionSelect(option.value)}
                         className={`p-4 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 ${
                           formData[currentStepData.field] === option.value
-                            ? 'border-blue-500 bg-blue-50 shadow-xl transform scale-110'
-                            : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
+                            ? "border-blue-500 bg-blue-50 shadow-xl transform scale-110"
+                            : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                         }`}
                       >
                         <div className="text-2xl font-bold text-gray-900 mb-1">
                           {option.value}
                         </div>
                         <div className="text-xs text-gray-600 font-medium">
-                          {option.label.split(' ')[0]} {option.label.split(' ')[1]}
+                          {option.label.split(" ")[0]}{" "}
+                          {option.label.split(" ")[1]}
                         </div>
                       </button>
                     ))}
                   </div>
                   {formData[currentStepData.field] && (
-                    <motion.div 
+                    <motion.div
                       className="text-center p-4 bg-blue-50 rounded-xl"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3 }}
                     >
                       <p className="text-blue-800 font-medium">
-                        {currentStepData.options?.find(opt => opt.value === formData[currentStepData.field])?.description}
+                        {
+                          currentStepData.options?.find(
+                            (opt) =>
+                              opt.value === formData[currentStepData.field],
+                          )?.description
+                        }
                       </p>
                     </motion.div>
                   )}
@@ -598,9 +675,13 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto">
                   {currentStepData.options?.map((option, index) => {
-                    const isSelected = currentStepData.type === 'multiselect' 
-                      ? (Array.isArray(formData[currentStepData.field]) && (formData[currentStepData.field] as any[]).includes(option.value))
-                      : formData[currentStepData.field] === option.value;
+                    const isSelected =
+                      currentStepData.type === "multiselect"
+                        ? Array.isArray(formData[currentStepData.field]) &&
+                          (formData[currentStepData.field] as any[]).includes(
+                            option.value,
+                          )
+                        : formData[currentStepData.field] === option.value;
 
                     return (
                       <motion.button
@@ -608,14 +689,14 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                         onClick={() => handleOptionSelect(option.value)}
                         className={`p-4 md:p-5 rounded-xl border-2 text-left transition-all duration-300 hover:scale-[1.02] relative ${
                           isSelected
-                            ? 'border-blue-500 bg-blue-50 shadow-xl transform scale-[1.03]'
-                            : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
+                            ? "border-blue-500 bg-blue-50 shadow-xl transform scale-[1.03]"
+                            : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                         }`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                       >
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="font-bold text-gray-900 mb-1 text-base">
                               {option.label}
@@ -626,7 +707,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                               </div>
                             )}
                           </div>
-                          
+
                           {/* Checkmark for selected options */}
                           {isSelected && (
                             <motion.div
@@ -638,11 +719,12 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                               <Check className="h-4 w-4 text-white" />
                             </motion.div>
                           )}
-                          
+
                           {/* Multiselect indicator */}
-                          {currentStepData.type === 'multiselect' && !isSelected && (
-                            <div className="w-6 h-6 rounded-full border-2 border-gray-300 ml-3 flex-shrink-0"></div>
-                          )}
+                          {currentStepData.type === "multiselect" &&
+                            !isSelected && (
+                              <div className="w-6 h-6 rounded-full border-2 border-gray-300 ml-3 flex-shrink-0"></div>
+                            )}
                         </div>
                       </motion.button>
                     );
@@ -652,7 +734,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             </motion.div>
 
             {/* Navigation */}
-            <motion.div 
+            <motion.div
               className="flex justify-between items-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -672,11 +754,11 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 disabled={!canProceed || isAnimating}
                 className={`flex items-center px-10 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
                   canProceed && !isAnimating
-                    ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white hover:shadow-xl transform hover:scale-105'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    ? "bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white hover:shadow-xl transform hover:scale-105"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
               >
-                {isLastStep ? 'Get My Results' : 'Next'}
+                {isLastStep ? "Get My Results" : "Next"}
                 {!isLastStep && <ChevronRight className="h-5 w-5 ml-2" />}
               </button>
             </motion.div>

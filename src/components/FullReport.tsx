@@ -12,7 +12,8 @@ import {
   Brain, 
   Target, 
   Lightbulb,
-  ChevronDown
+  ChevronDown,
+  RefreshCw
 } from 'lucide-react';
 import { QuizData, BusinessPath } from '../types';
 import { AIService } from '../utils/aiService';
@@ -47,6 +48,64 @@ const FullReport: React.FC<FullReportProps> = ({
 }) => {
   const [personalizedInsights, setPersonalizedInsights] = useState<PersonalizedInsights | null>(null);
   const [isGeneratingInsights, setIsGeneratingInsights] = useState(true);
+
+  // Check if topPaths is empty and render fallback UI
+  if (!topPaths || topPaths.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+        {/* Header */}
+        <div className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <button
+              onClick={onBack}
+              className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5 mr-2" />
+              Back to Results
+            </button>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="bg-white rounded-3xl p-12 shadow-xl">
+              <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <AlertTriangle className="h-10 w-10 text-orange-600" />
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                No Business Matches Found
+              </h1>
+              
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                We weren't able to find suitable business matches based on your current responses. 
+                This might happen if your preferences are very specific or if there was an issue processing your quiz results.
+              </p>
+
+              <div className="space-y-4">
+                <button
+                  onClick={onBack}
+                  className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  <RefreshCw className="h-5 w-5 mr-2" />
+                  Retake Quiz
+                </button>
+                
+                <p className="text-sm text-gray-500">
+                  Try adjusting your preferences or contact support if the issue persists.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   // Scroll to analysis section
   const scrollToAnalysis = () => {
@@ -235,7 +294,7 @@ const FullReport: React.FC<FullReportProps> = ({
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Target className="h-6 w-6 text-blue-600" />
             </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1">{topPaths[0]?.fitScore}%</div>
+            <div className="text-2xl font-bold text-gray-900 mb-1">{topPaths[0]?.fitScore || 0}%</div>
             <div className="text-gray-600 text-sm">Best Match Score</div>
           </div>
 

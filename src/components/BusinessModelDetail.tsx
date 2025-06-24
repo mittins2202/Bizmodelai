@@ -995,14 +995,14 @@ Format as:
               </div>
             )}
 
-            {/* Struggles and Solutions - Fixed styling with single border */}
+            {/* Struggles and Solutions - Fixed styling with single border and rounded corners */}
             {aiAnalysis && (
-              <div 
-                className="bg-white rounded-2xl p-8 mb-8 border-4"
-                style={{
-                  borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1'
-                }}
-              >
+              <div className="bg-white rounded-2xl p-8 mb-8 border-4 border-transparent" style={{
+                background: 'white',
+                borderRadius: '1rem',
+                borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1',
+                borderImageSlice: 1
+              }}>
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
                   Things You'll Struggle With
                 </h3>

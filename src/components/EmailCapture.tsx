@@ -266,18 +266,42 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
               </p>
             </motion.div>
 
-            {/* Continue as Guest */}
+            {/* Continue as Guest Link */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.5 }}
-              className="text-center border-t border-gray-200 pt-6"
+              className="text-center mb-6"
             >
               <button
                 onClick={handleGuestContinue}
-                className="text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                className="text-gray-600 hover:text-blue-600 font-medium transition-colors flex items-center justify-center group"
               >
-                Continue as guest (results won't be saved)
+                Continue as Guest (results won't be saved)
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.6 }}
+              className="flex flex-col sm:flex-row gap-3 border-t border-gray-200 pt-6"
+            >
+              {onReturnToQuiz && (
+                <button
+                  onClick={onReturnToQuiz}
+                  className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-medium hover:border-gray-400 hover:bg-gray-50 transition-all duration-300"
+                >
+                  Return to Quiz
+                </button>
+              )}
+              <button
+                onClick={handleGuestContinue}
+                className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all duration-300"
+              >
+                Skip Email & Continue
               </button>
             </motion.div>
           </div>

@@ -78,6 +78,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [0, 7], // Q1-Q8 (0-indexed)
     totalQuestions: 8,
+    timeEstimate: "3–4 minutes",
   },
   {
     id: 2,
@@ -89,6 +90,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [8, 20], // Q9-Q21 (0-indexed)
     totalQuestions: 13,
+    timeEstimate: "2.5–3 minutes",
   },
   {
     id: 3,
@@ -100,6 +102,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [21, 25], // Q22-Q26 (0-indexed)
     totalQuestions: 5,
+    timeEstimate: "4–5 minutes",
   },
   {
     id: 4,
@@ -110,6 +113,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [26, 30], // Q27-Q31 (0-indexed)
     totalQuestions: 5,
+    timeEstimate: "1.5–2 minutes",
   },
   {
     id: 5,
@@ -121,6 +125,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [31, 35], // Q32-Q36 (0-indexed)
     totalQuestions: 5,
+    timeEstimate: "2–3 minutes",
   },
   {
     id: 6,
@@ -132,6 +137,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [36, 44], // Q37-Q45 (0-indexed)
     totalQuestions: 9,
+    timeEstimate: "3–4 minutes",
   },
 ];
 

@@ -270,6 +270,11 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [currentRound, setCurrentRound] = useState(1);
   const [showExitModal, setShowExitModal] = useState(false);
 
+  // Debug logging for exit modal state
+  useEffect(() => {
+    console.log('Exit modal state changed:', showExitModal);
+  }, [showExitModal]);
+
   // Get current round info
   const getCurrentRound = () => {
     return (
@@ -404,9 +409,17 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     onBack();
   };
 
-  const handleBackButtonClick = () => {
-    // FIXED: Always show exit modal immediately, regardless of page type
-    setShowExitModal(true);
+  // FIXED: Simplified exit button handler with immediate state update
+  const handleBackButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Back button clicked - showing exit modal immediately');
+    
+    // Force immediate state update using callback form
+    setShowExitModal(prevState => {
+      console.log('Setting exit modal to true, previous state was:', prevState);
+      return true;
+    });
   };
 
   const handleRoundContinue = () => {
@@ -635,7 +648,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   // Regular Quiz Question
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-50 to-blue-50 relative">
-      {/* Back Arrow Button - Prominent Position */}
+      {/* Back Arrow Button - Shows Exit Modal */}
       <motion.button
         onClick={handleBackButtonClick}
         className="fixed top-6 left-6 z-20 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-300 transform hover:scale-110 group"

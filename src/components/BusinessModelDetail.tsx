@@ -387,7 +387,7 @@ CONS:
     data: QuizData,
     path: BusinessPath,
   ): Promise<string> => {
-    const prompt = `Based on this user's profile, identify the main challenges they'll face with ${path.name} and provide actionable solutions. Format as bullet points.
+    const prompt = `Based on this user's profile, identify 6 specific challenges they'll face with ${path.name}. Format as bullet points without periods at the end.
 
 User Profile:
 - Self Motivation: ${data.selfMotivationLevel}/5
@@ -396,7 +396,15 @@ User Profile:
 - Time Commitment: ${data.weeklyTimeCommitment} hours/week
 - Learning Preference: ${data.learningPreference}
 
-Focus on their specific weaknesses and how to overcome them. Format as bullet points with solutions.`;
+Generate 6 bullet points, each one sentence without periods. Focus on their specific weaknesses and challenges they'll face.
+
+Format as:
+- Challenge 1 without period
+- Challenge 2 without period
+- Challenge 3 without period
+- Challenge 4 without period
+- Challenge 5 without period
+- Challenge 6 without period`;
 
     try {
       const aiService = AIService.getInstance();
@@ -534,7 +542,12 @@ Focus on their specific weaknesses and how to overcome them. Format as bullet po
   };
 
   const generateFallbackStruggles = (path: BusinessPath): string => {
-    return `Based on your profile, you may face challenges with consistency and motivation during slow periods. To overcome this, set small daily goals and track your progress. Focus on building systems and routines that support your success, and don't hesitate to seek support from communities and mentors in this field.`;
+    return `- Building consistent daily habits and routines for long-term success
+- Managing time effectively between learning new skills and executing tasks
+- Staying motivated during slow periods when results aren't immediately visible
+- Overcoming perfectionism that might delay launching your first offerings
+- Building confidence to position yourself as an expert in your chosen field
+- Balancing multiple priorities while maintaining focus on core business activities`;
   };
 
   const handleSectionClick = (sectionId: string) => {
@@ -644,6 +657,32 @@ Focus on their specific weaknesses and how to overcome them. Format as bullet po
       `Success in ${path.name} depends heavily on your ability to adapt to market changes and consistently deliver value to your target audience. The most successful entrepreneurs in this field focus on building strong systems, maintaining excellent customer relationships, and continuously improving their offerings based on feedback and market demands.`
     ];
     return paragraphs;
+  };
+
+  // Parse struggles into bullet points
+  const parseStruggles = (strugglesText: string): string[] => {
+    const lines = strugglesText
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .map(line => line.replace(/^[-•*]\s*/, '').replace(/\.$/, ''))
+      .filter(line => line.length > 10);
+    
+    // Ensure we have exactly 6 bullet points
+    const struggles = lines.slice(0, 6);
+    while (struggles.length < 6) {
+      const fallbackStruggles = [
+        "Building consistent daily habits and routines for long-term success",
+        "Managing time effectively between learning new skills and executing tasks",
+        "Staying motivated during slow periods when results aren't immediately visible",
+        "Overcoming perfectionism that might delay launching your first offerings",
+        "Building confidence to position yourself as an expert in your chosen field",
+        "Balancing multiple priorities while maintaining focus on core business activities"
+      ];
+      struggles.push(fallbackStruggles[struggles.length]);
+    }
+    
+    return struggles;
   };
 
   return (
@@ -797,6 +836,15 @@ Focus on their specific weaknesses and how to overcome them. Format as bullet po
               ))}
             </div>
 
+            {/* Potential Income Highlight */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 mb-6">
+              <div className="flex items-center mb-2">
+                <TrendingUp className="h-5 w-5 text-green-600 mr-2" />
+                <span className="text-sm font-medium text-green-800">Potential Income</span>
+              </div>
+              <div className="text-2xl font-bold text-green-700">{businessPath.potentialIncome}</div>
+            </div>
+
             {/* Who is this for */}
             <div className="bg-white rounded-2xl p-8 shadow-lg mb-12">
               <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
@@ -947,29 +995,25 @@ Focus on their specific weaknesses and how to overcome them. Format as bullet po
               </div>
             )}
 
-            {/* Struggles and Solutions - Updated styling */}
+            {/* Struggles and Solutions - Fixed styling with single border */}
             {aiAnalysis && (
-              <div className="bg-white rounded-2xl p-8 mb-8 border-4 border-transparent bg-clip-padding" style={{
-                background: 'white',
-                borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1'
-              }}>
-                <div className="border-4 border-transparent rounded-2xl p-8" style={{
+              <div 
+                className="bg-white rounded-2xl p-8 mb-8 border-4"
+                style={{
                   borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1'
-                }}>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                    Things You'll Struggle With
-                  </h3>
-                  <div className="prose prose-lg text-gray-700">
-                    <ul className="space-y-3">
-                      {aiAnalysis.strugglesAndSolutions.split('\n').filter(line => line.trim()).map((struggle, index) => (
-                        <li key={index} className="flex items-start">
-                          <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                          <span>{struggle.replace(/^[-•*]\s*/, '')}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                }}
+              >
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                  Things You'll Struggle With
+                </h3>
+                <ul className="space-y-3">
+                  {parseStruggles(aiAnalysis.strugglesAndSolutions).map((struggle, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-gray-700">{struggle}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 

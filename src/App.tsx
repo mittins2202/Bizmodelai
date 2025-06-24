@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import BusinessExplorer from "./pages/BusinessExplorer";
 import SuccessStories from "./pages/SuccessStories";
+import ContactUs from "./pages/ContactUs";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -146,6 +147,15 @@ function App() {
               element={
                 <Layout>
                   <SuccessStories />
+                </Layout>
+              }
+            />
+
+            <Route
+              path="/contact"
+              element={
+                <Layout>
+                  <ContactUs />
                 </Layout>
               }
             />

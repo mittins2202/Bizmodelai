@@ -46,7 +46,7 @@ interface AIPersonalizedAnalysis {
 const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ businessModel }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 600, height: 300 });
+  const [dimensions, setDimensions] = useState({ width: 600, height: 350 }); // Increased height from 300 to 350
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -56,7 +56,7 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
         const newWidth = Math.max(400, Math.min(800, containerWidth - 48)); // 48px for padding
-        const newHeight = Math.max(250, newWidth * 0.4); // Maintain aspect ratio
+        const newHeight = Math.max(300, newWidth * 0.45); // Increased aspect ratio from 0.4 to 0.45
         setDimensions({ width: newWidth, height: newHeight });
       }
     };
@@ -93,8 +93,8 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
     // Bell curve formula: peak at center, tapering to edges
     const center = dimensions.width * 0.4; // Peak slightly left of center (typical income)
     const width = dimensions.width * 0.25;
-    const height = dimensions.height * 0.6;
-    const baseY = dimensions.height * 0.85;
+    const height = dimensions.height * 0.5; // Adjusted for new height
+    const baseY = dimensions.height * 0.75; // Adjusted for new height
     
     const bellValue = Math.exp(-Math.pow(x - center, 2) / (2 * Math.pow(width, 2)));
     return baseY - (height * bellValue);
@@ -116,7 +116,7 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
   const generateAreaPath = () => {
     const points = [];
     const step = dimensions.width / 100;
-    const baseY = dimensions.height * 0.85;
+    const baseY = dimensions.height * 0.75; // Adjusted for new height
     
     points.push(`0,${baseY}`); // Start at bottom left
     
@@ -217,14 +217,14 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
                   x1={x}
                   y1={dimensions.height * 0.1}
                   x2={x}
-                  y2={dimensions.height * 0.85}
+                  y2={dimensions.height * 0.75}
                   stroke="#6b7280"
                   strokeWidth="1"
                 />
               );
             })}
             {Array.from({ length: 4 }, (_, i) => {
-              const y = dimensions.height * 0.1 + (dimensions.height * 0.75 / 3) * i;
+              const y = dimensions.height * 0.1 + (dimensions.height * 0.65 / 3) * i;
               return (
                 <line
                   key={`h-${i}`}
@@ -263,7 +263,7 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
                 x1={mousePosition.x}
                 y1={dimensions.height * 0.1}
                 x2={mousePosition.x}
-                y2={dimensions.height * 0.85}
+                y2={dimensions.height * 0.75}
                 stroke="#8b5cf6"
                 strokeWidth="2"
                 strokeDasharray="4,4"
@@ -293,15 +293,15 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
           </text>
           <text
             x={-10}
-            y={dimensions.height * 0.8}
+            y={dimensions.height * 0.7}
             textAnchor="end"
             className="text-xs fill-gray-500 font-medium"
           >
             Low
           </text>
 
-          {/* X-axis labels with proper spacing */}
-          <g transform={`translate(0, ${dimensions.height * 0.92})`}>
+          {/* X-axis labels - keeping same position as requested */}
+          <g transform={`translate(0, ${dimensions.height * 0.82})`}>
             <text x={0} textAnchor="start" className="text-xs fill-gray-500 font-medium">
               $0
             </text>
@@ -319,20 +319,12 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
             </text>
           </g>
 
-          {/* "Typical" label at peak */}
-          <text
-            x={dimensions.width * 0.4}
-            y={getCurveY(dimensions.width * 0.4) - 15}
-            textAnchor="middle"
-            className="text-xs fill-gray-600 font-medium"
-          >
-            Typical
-          </text>
+          {/* Removed "Typical" label as requested */}
 
-          {/* Axis titles with proper spacing */}
+          {/* Axis titles with increased spacing */}
           <text
             x={dimensions.width / 2}
-            y={dimensions.height - 8}
+            y={dimensions.height - 15} // Moved down to maintain same padding from bottom
             textAnchor="middle"
             className="text-sm fill-gray-700 font-medium"
           >
@@ -1126,14 +1118,9 @@ Format as:
 
             {/* Struggles and Solutions - Fixed styling with single border and rounded corners */}
             {aiAnalysis && (
-              <div 
-                className="bg-white rounded-2xl p-8 mb-8"
-                style={{
-                  border: '3px solid transparent',
-                  borderRadius: '1rem',
-                  background: 'linear-gradient(white, white) padding-box, linear-gradient(45deg, #3b82f6, #8b5cf6) border-box'
-                }}
-              >
+              <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg border-4 border-transparent" style={{
+                borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1'
+              }}>
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
                   Things You'll Struggle With
                 </h3>
@@ -1284,7 +1271,7 @@ Format as:
             </div>
 
             {/* Mistakes to Avoid */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-transparent" style={{
+            <div className="bg-white rounded-2xl p-8 shadow-lg mb-8 border-4 border-transparent" style={{
               borderImage: 'linear-gradient(45deg, #ef4444, #f97316) 1'
             }}>
               <h3 className="text-2xl font-bold text-gray-900 mb-6">
@@ -1301,7 +1288,7 @@ Format as:
             </div>
 
             {/* View Full Report Button */}
-            <div className="text-center mb-8 mt-8">
+            <div className="text-center mb-8">
               <button
                 onClick={() => navigate("/results")}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center mx-auto"

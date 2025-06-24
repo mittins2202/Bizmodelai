@@ -644,12 +644,11 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                             : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                         }`}
                       >
-                        <div className="text-2xl font-bold text-gray-900 mb-1">
+                        <div className="text-2xl font-bold text-gray-900 mb-2">
                           {option.value}
                         </div>
-                        <div className="text-xs text-gray-600 font-medium">
-                          {option.label.split(" ")[0]}{" "}
-                          {option.label.split(" ")[1]}
+                        <div className="text-xs text-gray-600 font-medium leading-tight">
+                          {option.label}
                         </div>
                       </button>
                     ))}

@@ -278,6 +278,19 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     );
   };
 
+  // Global keyboard event handler for escape key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setShowExitModal(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Add keyboard event handlers for round intro pages
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -285,9 +298,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         if (event.key === 'Enter') {
           event.preventDefault();
           handleRoundContinue();
-        } else if (event.key === 'Escape') {
-          event.preventDefault();
-          setShowExitModal(true);
         }
       }
     };

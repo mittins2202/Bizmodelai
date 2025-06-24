@@ -78,6 +78,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [0, 7], // Q1-Q8 (0-indexed)
     totalQuestions: 8,
+    timeEstimate: "3–4 minutes",
   },
   {
     id: 2,
@@ -89,6 +90,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [8, 20], // Q9-Q21 (0-indexed)
     totalQuestions: 13,
+    timeEstimate: "2.5–3 minutes",
   },
   {
     id: 3,
@@ -100,6 +102,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [21, 25], // Q22-Q26 (0-indexed)
     totalQuestions: 5,
+    timeEstimate: "4–5 minutes",
   },
   {
     id: 4,
@@ -110,6 +113,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [26, 30], // Q27-Q31 (0-indexed)
     totalQuestions: 5,
+    timeEstimate: "1.5–2 minutes",
   },
   {
     id: 5,
@@ -121,6 +125,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [31, 35], // Q32-Q36 (0-indexed)
     totalQuestions: 5,
+    timeEstimate: "2–3 minutes",
   },
   {
     id: 6,
@@ -132,6 +137,7 @@ const rounds = [
     bgColor: "from-blue-50 to-purple-50",
     questionRange: [36, 44], // Q37-Q45 (0-indexed)
     totalQuestions: 9,
+    timeEstimate: "3–4 minutes",
   },
 ];
 
@@ -502,7 +508,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               <div className="flex items-center text-gray-500">
                 <Clock className="h-5 w-5 mr-2" />
                 <span className="font-medium">
-                  ~{Math.ceil(currentRoundInfo.totalQuestions * 0.5)} minutes
+                  {currentRoundInfo.timeEstimate}
                 </span>
               </div>
             </motion.div>
@@ -638,18 +644,17 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                       <button
                         key={index}
                         onClick={() => handleOptionSelect(option.value)}
-                        className={`p-4 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 ${
+                        className={`p-3 py-4 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 min-h-[90px] flex flex-col justify-center ${
                           formData[currentStepData.field] === option.value
                             ? "border-blue-500 bg-blue-50 shadow-xl transform scale-110"
                             : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
                         }`}
                       >
-                        <div className="text-2xl font-bold text-gray-900 mb-1">
+                        <div className="text-2xl font-bold text-gray-900 mb-2">
                           {option.value}
                         </div>
-                        <div className="text-xs text-gray-600 font-medium">
-                          {option.label.split(" ")[0]}{" "}
-                          {option.label.split(" ")[1]}
+                        <div className="text-xs text-gray-600 font-medium leading-tight">
+                          {option.label}
                         </div>
                       </button>
                     ))}

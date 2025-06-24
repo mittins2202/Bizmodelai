@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Star,
@@ -59,6 +60,7 @@ interface AIInsights {
 }
 
 const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
+  const navigate = useNavigate();
   const [selectedPath, setSelectedPath] = useState<BusinessPath | null>(null);
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const [showFullReport, setShowFullReport] = useState(false);
@@ -219,7 +221,15 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
 
   const handleLearnMore = (path: BusinessPath) => {
     console.log("Learn more about why", path.name, "fits this user");
-    setShowUnlockModal(true);
+
+    // If user has already unlocked analysis, navigate directly to business model detail page
+    if (hasUnlockedAnalysis) {
+      navigate(`/business/${path.id}`);
+    } else {
+      // Otherwise, show the paywall modal
+      setPaywallType("learn-more");
+      setShowUnlockModal(true);
+    }
   };
 
   const handleUnlockAnalysis = () => {
@@ -245,6 +255,26 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
     // 2. Create unique URL for user's results
     // 3. Save payment record and unlock status
     // 4. Redirect to dedicated results page
+  };
+
+  const handleBusinessCardPayment = async () => {
+    setIsProcessingPayment(true);
+
+    // Simulate payment processing
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    setHasUnlockedAnalysis(true);
+    setShowPreview(false);
+    setShowUnlockModal(false);
+    setIsProcessingPayment(false);
+
+    // Don't navigate to full report - keep user on current page
+    // This allows them to see the unlocked business cards
+
+    // In a real implementation, this would:
+    // 1. Process payment through Stripe
+    // 2. Save payment record and unlock status
+    // 3. Keep user on results page to see unlocked cards
   };
 
   const togglePreview = () => {
@@ -580,7 +610,31 @@ Business Path Platform - businesspath.com
                       {hasUnlockedAnalysis ? (
                         // Full content when unlocked
                         <div>
-                          <p className="mb-6">{aiAnalysis.fullAnalysis}</p>
+                          {(() => {
+                            const sentences =
+                              aiAnalysis.fullAnalysis.split(". ");
+                            const thirdLength = Math.ceil(sentences.length / 3);
+
+                            const firstParagraph =
+                              sentences.slice(0, thirdLength).join(". ") +
+                              (sentences.length > thirdLength ? "." : "");
+                            const secondParagraph =
+                              sentences
+                                .slice(thirdLength, thirdLength * 2)
+                                .join(". ") +
+                              (sentences.length > thirdLength * 2 ? "." : "");
+                            const thirdParagraph = sentences
+                              .slice(thirdLength * 2)
+                              .join(". ");
+
+                            return (
+                              <div className="text-blue-50 leading-relaxed text-lg mb-6">
+                                <p className="mb-4">{firstParagraph}</p>
+                                <p className="mb-4">{secondParagraph}</p>
+                                <p className="mb-6">{thirdParagraph}</p>
+                              </div>
+                            );
+                          })()}
 
                           <div className="grid md:grid-cols-2 gap-6 mt-6">
                             <div>
@@ -675,7 +729,7 @@ Business Path Platform - businesspath.com
                               onClick={() =>
                                 handleViewFullReport(personalizedPaths[0])
                               }
-                              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
+                              className="w-full bg-white text-purple-600 border-2 border-purple-600 py-4 rounded-xl font-bold text-lg hover:bg-purple-50 hover:border-purple-700 hover:text-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
                             >
                               <FileText className="h-5 w-5 mr-2 inline" />
                               View Full Report
@@ -686,7 +740,7 @@ Business Path Platform - businesspath.com
                                 onClick={() =>
                                   handleLearnMore(personalizedPaths[0])
                                 }
-                                className="text-blue-100 hover:text-white font-medium text-lg transition-all duration-300 inline-flex items-center group"
+                                className="text-white hover:text-gray-300 font-medium text-lg transition-all duration-300 inline-flex items-center group"
                               >
                                 <span>
                                   Get started with {personalizedPaths[0]?.name}
@@ -697,55 +751,139 @@ Business Path Platform - businesspath.com
                           </div>
                         </div>
                       ) : (
-                        // Preview with progressive blur effect
+                        // Preview with seamless gradient fade effect
                         <div className="relative">
-                          {(() => {
-                            const { firstParagraph, secondParagraph } =
-                              splitAnalysis(aiAnalysis.fullAnalysis);
-                            return (
-                              <>
-                                {/* First paragraph with subtle blur */}
-                                <p className="mb-4 filter blur-[0.5px] opacity-90">
-                                  {firstParagraph}
-                                </p>
+                          {/* Three paragraphs with seamless gradient fade */}
+                          <div className="relative mb-8">
+                            {(() => {
+                              const sentences =
+                                aiAnalysis.fullAnalysis.split(". ");
+                              const thirdLength = Math.ceil(
+                                sentences.length / 3,
+                              );
 
-                                {/* Second paragraph with stronger blur */}
-                                <p className="mb-6 filter blur-[2px] opacity-60">
-                                  {secondParagraph}
-                                </p>
-                              </>
-                            );
-                          })()}
+                              const firstParagraph =
+                                sentences.slice(0, thirdLength).join(". ") +
+                                (sentences.length > thirdLength ? "." : "");
+                              const secondParagraph =
+                                sentences
+                                  .slice(thirdLength, thirdLength * 2)
+                                  .join(". ") +
+                                (sentences.length > thirdLength * 2 ? "." : "");
+                              const thirdParagraph = sentences
+                                .slice(thirdLength * 2)
+                                .join(". ");
 
-                          {/* Additional content with maximum blur */}
-                          <div className="filter blur-[3px] opacity-40">
-                            <div className="grid md:grid-cols-2 gap-6 mt-6">
-                              <div>
-                                <h4 className="font-bold mb-3">Key Insights</h4>
-                                <div className="space-y-2">
-                                  {aiAnalysis.keyInsights
-                                    .slice(0, 2)
-                                    .map((_, index) => (
-                                      <div
-                                        key={index}
-                                        className="h-4 bg-white/20 rounded"
-                                      ></div>
-                                    ))}
+                              return (
+                                <div
+                                  className="text-blue-50 leading-relaxed text-lg"
+                                  style={{
+                                    WebkitMask:
+                                      "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0) 100%)",
+                                    mask: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.8) 40%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0) 100%)",
+                                  }}
+                                >
+                                  {/* First paragraph - fully visible */}
+                                  <p className="mb-4">{firstParagraph}</p>
+
+                                  {/* Second paragraph - starts to fade */}
+                                  <p className="mb-4">{secondParagraph}</p>
+
+                                  {/* Third paragraph - fades to invisible */}
+                                  <p className="mb-6">{thirdParagraph}</p>
+                                </div>
+                              );
+                            })()}
+                          </div>
+
+                          {/* Value Proposition Columns - fully visible below faded text */}
+                          <div className="mb-24">
+                            <div className="grid md:grid-cols-2 gap-8">
+                              {/* Column 1 */}
+                              <div className="space-y-6">
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">🧠</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Your Business Blueprint
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Discover the exact business model you
+                                      should pursue—tailored to your
+                                      personality, strengths, and goals.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">⚠️</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Models to Avoid
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      See which business paths are poor fits for
+                                      you and why they're likely to lead to
+                                      burnout or failure.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">🚀</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Step-by-Step Launch Guidance
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Learn how to get started with your
+                                      best-fit business model, including tools,
+                                      timelines, and tips.
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                              <div>
-                                <h4 className="font-bold mb-3">
-                                  Success Predictors
-                                </h4>
-                                <div className="space-y-2">
-                                  {aiAnalysis.successPredictors
-                                    .slice(0, 2)
-                                    .map((_, index) => (
-                                      <div
-                                        key={index}
-                                        className="h-4 bg-white/20 rounded"
-                                      ></div>
-                                    ))}
+
+                              {/* Column 2 */}
+                              <div className="space-y-6">
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">💪</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Your Strengths & Blind Spots
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Get a clear breakdown of what you're
+                                      naturally great at—and where you'll need
+                                      support or growth.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">📊</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Income Potential & Market Fit
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Understand how much you can realistically
+                                      earn and how big the opportunity is.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-start space-x-4">
+                                  <div className="text-3xl mt-1">🛠</div>
+                                  <div>
+                                    <h4 className="font-bold text-white text-lg mb-2">
+                                      Skills You Need to Succeed
+                                    </h4>
+                                    <p className="text-blue-100 text-sm leading-relaxed">
+                                      Find out which skills you already have,
+                                      what to build, and what gaps to close.
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -755,30 +893,28 @@ Business Path Platform - businesspath.com
                     </div>
                   </div>
 
-                  {/* Paywall Overlay */}
+                  {/* Paywall Section */}
                   {!hasUnlockedAnalysis && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-purple-600 via-purple-600/95 to-transparent pt-16 pb-6 px-6 text-center"
+                      className="mt-12 text-center"
                     >
-                      <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                        <Lock className="h-8 w-8 text-white mx-auto mb-4" />
-                        <h4 className="text-xl font-bold text-white mb-2">
-                          Unlock your results with small one-time fee
-                        </h4>
-                        <p className="text-blue-100 mb-6">
-                          Get the full personalized analysis, detailed insights,
-                          and success strategies for just $9.99
-                        </p>
-                        <button
-                          onClick={handleUnlockAnalysis}
-                          className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 shadow-xl"
-                        >
-                          Unlock Full Analysis - $9.99
-                        </button>
-                      </div>
+                      <Lock className="h-8 w-8 text-white mx-auto mb-4" />
+                      <h4 className="text-xl font-bold text-white mb-2">
+                        Unlock your results with small one-time fee
+                      </h4>
+                      <p className="text-blue-100 mb-6">
+                        Get the full personalized analysis, detailed insights,
+                        and success strategies for just $9.99
+                      </p>
+                      <button
+                        onClick={handleUnlockAnalysis}
+                        className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-8 py-3 rounded-full font-bold hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                      >
+                        Unlock Full Analysis - $9.99
+                      </button>
                     </motion.div>
                   )}
                 </div>
@@ -818,6 +954,8 @@ Business Path Platform - businesspath.com
                     }}
                   />
                 )}
+
+                {/* Ranking bubbles */}
                 {index === 0 && (
                   <motion.div
                     className="absolute -top-4 left-1/2 transform -translate-x-1/2"
@@ -828,6 +966,32 @@ Business Path Platform - businesspath.com
                     <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
                       <Star className="h-4 w-4 mr-2" />
                       AI RECOMMENDED
+                    </div>
+                  </motion.div>
+                )}
+                {index === 1 && (
+                  <motion.div
+                    className="absolute -top-4 right-1/4 transform translate-x-1/2"
+                    initial={{ scale: 0, rotate: -10 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.6, delay: 0.9 }}
+                  >
+                    <div className="bg-gradient-to-r from-gray-400 to-gray-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      2nd Best
+                    </div>
+                  </motion.div>
+                )}
+                {index === 2 && (
+                  <motion.div
+                    className="absolute -top-4 right-1/4 transform translate-x-1/2"
+                    initial={{ scale: 0, rotate: -10 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.6, delay: 1.0 }}
+                  >
+                    <div className="bg-gradient-to-r from-slate-400 to-slate-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      3rd Best
                     </div>
                   </motion.div>
                 )}
@@ -867,7 +1031,9 @@ Business Path Platform - businesspath.com
 
                     {/* Key Metrics in compact grid */}
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                      <div className="bg-gray-50 rounded-lg p-3">
+                      <div
+                        className={`${index === 0 ? "bg-white" : "bg-gray-50"} rounded-lg p-3`}
+                      >
                         <div className="flex items-center mb-1">
                           <Clock className="h-4 w-4 text-gray-500 mr-1" />
                           <span className="text-xs font-medium text-gray-700">
@@ -878,7 +1044,9 @@ Business Path Platform - businesspath.com
                           {path.timeToProfit}
                         </div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-3">
+                      <div
+                        className={`${index === 0 ? "bg-white" : "bg-gray-50"} rounded-lg p-3`}
+                      >
                         <div className="flex items-center mb-1">
                           <DollarSign className="h-4 w-4 text-gray-500 mr-1" />
                           <span className="text-xs font-medium text-gray-700">
@@ -893,25 +1061,29 @@ Business Path Platform - businesspath.com
 
                     {/* Action Elements */}
                     <div className="space-y-3 mt-auto">
-                      {/* Primary CTA */}
-                      <button
-                        onClick={() => handleViewFullReport(path)}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform group-hover:scale-[1.02] flex items-center justify-center"
-                      >
-                        <FileText className="h-4 w-4 mr-2" />
-                        View Full Report
-                      </button>
-
-                      {/* Secondary CTA - Centered and positioned below button */}
-                      <div className="text-center">
+                      {/* Primary CTA - Only show if card is not locked */}
+                      {!(index > 0 && !hasUnlockedAnalysis) && (
                         <button
-                          onClick={() => handleLearnMore(path)}
-                          className="text-gray-700 hover:text-blue-600 transition-colors duration-300 text-sm font-bold flex items-center justify-center group"
+                          onClick={() => handleViewFullReport(path)}
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform group-hover:scale-[1.02] flex items-center justify-center"
                         >
-                          Learn more about {path.name} for you
-                          <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                          <FileText className="h-4 w-4 mr-2" />
+                          View Full Report
                         </button>
-                      </div>
+                      )}
+
+                      {/* Secondary CTA - Only show if card is not locked */}
+                      {!(index > 0 && !hasUnlockedAnalysis) && (
+                        <div className="text-center">
+                          <button
+                            onClick={() => handleLearnMore(path)}
+                            className="text-gray-700 hover:text-blue-600 transition-colors duration-300 text-sm font-bold flex items-center justify-center group"
+                          >
+                            Learn more about {path.name} for you
+                            <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -1134,7 +1306,11 @@ Business Path Platform - businesspath.com
       <PaywallModal
         isOpen={showUnlockModal}
         onClose={() => setShowUnlockModal(false)}
-        onUnlock={handlePayment}
+        onUnlock={
+          paywallType === "business-model"
+            ? handleBusinessCardPayment
+            : handlePayment
+        }
         type={paywallType}
       />
     </div>

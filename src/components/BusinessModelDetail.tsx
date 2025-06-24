@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   Clock,
@@ -17,6 +17,8 @@ import {
   ArrowRight,
   FileText,
   Award,
+  Menu,
+  X,
 } from "lucide-react";
 import { QuizData, BusinessPath } from "../types";
 import { businessPaths } from "../data/businessPaths";
@@ -349,6 +351,15 @@ const BusinessModelDetail: React.FC<BusinessModelDetailProps> = ({
   );
   const [isGeneratingAI, setIsGeneratingAI] = useState(true);
   const [activeSection, setActiveSection] = useState("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
 
   useEffect(() => {
     if (!businessId) return;
@@ -637,10 +648,10 @@ Format as:
 
   const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
+    closeSidebar(); // Close sidebar when section is clicked
     
     const element = document.getElementById(sectionId);
     if (element) {
-      const sidebarWidth = 256;
       const headerOffset = 80;
       
       const elementRect = element.getBoundingClientRect();
@@ -652,6 +663,11 @@ Format as:
         behavior: 'smooth'
       });
     }
+  };
+
+  const handleBackClick = () => {
+    closeSidebar(); // Close sidebar when back is clicked
+    navigate(-1);
   };
 
   const sections = [
@@ -794,16 +810,54 @@ Format as:
       <Header />
       
       <div className="flex flex-1">
+        {/* Hamburger Menu Button */}
+        <button
+          onClick={toggleSidebar}
+          className="fixed top-20 left-4 z-50 bg-white shadow-lg rounded-lg p-3 hover:bg-gray-50 transition-all duration-300 transform hover:scale-110"
+          aria-label="Toggle navigation menu"
+        >
+          <Menu className="h-6 w-6 text-gray-700" />
+        </button>
+
+        {/* Overlay */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/50 z-30"
+              onClick={closeSidebar}
+            />
+          )}
+        </AnimatePresence>
+
         {/* Sidebar Navigation */}
-        <div className="w-64 bg-white shadow-lg fixed h-full z-10 flex flex-col" style={{ top: '64px' }}>
+        <motion.div
+          initial={{ x: '-100%' }}
+          animate={{ x: isSidebarOpen ? 0 : '-100%' }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="w-64 bg-white shadow-lg fixed h-full z-40 flex flex-col transform transition-transform duration-300 ease-in-out"
+          style={{ top: '64px', height: 'calc(100vh - 64px)' }}
+        >
           <div className="p-6 border-b border-gray-200">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center text-gray-600 hover:text-gray-800 mb-4"
-            >
-              <ArrowLeft className="h-5 w-5 mr-2" />
-              Back
-            </button>
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={handleBackClick}
+                className="flex items-center text-gray-600 hover:text-gray-800"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back
+              </button>
+              <button
+                onClick={closeSidebar}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Close menu"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
             <h2 className="text-lg font-bold text-gray-900">Navigation</h2>
           </div>
 
@@ -822,10 +876,10 @@ Format as:
               </button>
             ))}
           </nav>
-        </div>
+        </motion.div>
 
         {/* Main Content */}
-        <div className="ml-64 flex-1">
+        <div className="flex-1">
           <div className="max-w-6xl mx-auto px-8 py-12">
             {/* Title */}
             <motion.div

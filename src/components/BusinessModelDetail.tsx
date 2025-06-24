@@ -44,34 +44,57 @@ interface AIPersonalizedAnalysis {
 }
 
 const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ businessModel }) => {
-  const [mousePosition, setMousePosition] = useState({ x: 200, y: 150 });
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 600, height: 300 });
+  const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Responsive sizing
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const newWidth = Math.max(400, Math.min(800, containerWidth - 48)); // 48px for padding
+        const newHeight = Math.max(250, newWidth * 0.4); // Maintain aspect ratio
+        setDimensions({ width: newWidth, height: newHeight });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   const handleMouseMove = (event: React.MouseEvent<SVGSVGElement>) => {
     if (svgRef.current) {
       const rect = svgRef.current.getBoundingClientRect();
-      const x = Math.max(0, Math.min(400, event.clientX - rect.left));
+      const x = Math.max(0, Math.min(dimensions.width, event.clientX - rect.left));
       const y = event.clientY - rect.top;
       setMousePosition({ x, y });
     }
   };
 
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
+
   const getIncomeAtPosition = (x: number) => {
-    // Interpolate income based on x position
-    const percentage = x / 400;
+    // More realistic income distribution curve
+    const percentage = x / dimensions.width;
+    const minIncome = 0;
     const maxIncome = 25000;
-    // Use a more realistic distribution curve
-    const income = Math.round(maxIncome * Math.pow(percentage, 1.5));
-    return Math.max(0, income);
+    
+    // Use exponential curve for more realistic income distribution
+    const income = minIncome + (maxIncome - minIncome) * Math.pow(percentage, 1.8);
+    return Math.round(income);
   };
 
   const getCurveY = (x: number) => {
-    // Bell curve formula: peak at center (x=200), tapering to edges
-    const center = 200;
-    const width = 120;
-    const height = 180;
-    const baseY = 250;
+    // Bell curve formula: peak at center, tapering to edges
+    const center = dimensions.width * 0.4; // Peak slightly left of center (typical income)
+    const width = dimensions.width * 0.25;
+    const height = dimensions.height * 0.6;
+    const baseY = dimensions.height * 0.85;
     
     const bellValue = Math.exp(-Math.pow(x - center, 2) / (2 * Math.pow(width, 2)));
     return baseY - (height * bellValue);
@@ -79,38 +102,84 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
 
   // Generate smooth curve path
   const generateCurvePath = () => {
-    let path = `M 0 ${getCurveY(0)}`;
-    for (let x = 10; x <= 400; x += 10) {
-      path += ` L ${x} ${getCurveY(x)}`;
+    const points = [];
+    const step = dimensions.width / 100;
+    
+    for (let x = 0; x <= dimensions.width; x += step) {
+      points.push(`${x},${getCurveY(x)}`);
     }
-    return path;
+    
+    return `M ${points.join(' L ')}`;
   };
 
   // Generate gradient area path
   const generateAreaPath = () => {
-    let path = `M 0 250`; // Start at bottom
-    for (let x = 0; x <= 400; x += 10) {
-      path += ` L ${x} ${getCurveY(x)}`;
+    const points = [];
+    const step = dimensions.width / 100;
+    const baseY = dimensions.height * 0.85;
+    
+    points.push(`0,${baseY}`); // Start at bottom left
+    
+    for (let x = 0; x <= dimensions.width; x += step) {
+      points.push(`${x},${getCurveY(x)}`);
     }
-    path += ` L 400 250 Z`; // Close the path
-    return path;
+    
+    points.push(`${dimensions.width},${baseY}`); // End at bottom right
+    points.push(`0,${baseY}`); // Close path
+    
+    return `M ${points.join(' L ')} Z`;
   };
 
+  const formatIncome = (income: number) => {
+    if (income >= 1000) {
+      return `$${(income / 1000).toFixed(1)}K`;
+    }
+    return `$${income}`;
+  };
+
+  const getTooltipPosition = () => {
+    const tooltipWidth = 120;
+    const tooltipHeight = 40;
+    const padding = 10;
+    
+    let left = mousePosition.x + padding;
+    let top = mousePosition.y - tooltipHeight - padding;
+    
+    // Keep tooltip within bounds
+    if (left + tooltipWidth > dimensions.width) {
+      left = mousePosition.x - tooltipWidth - padding;
+    }
+    if (top < 0) {
+      top = mousePosition.y + padding;
+    }
+    
+    return { left, top };
+  };
+
+  const tooltipPos = getTooltipPosition();
+
   return (
-    <div className="relative">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">
-        Income Potential Distribution
-      </h3>
-      <div className="relative bg-white p-6 rounded-xl border border-gray-200">
+    <div className="relative" ref={containerRef}>
+      <div className="mb-6">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          Income Potential Distribution
+        </h3>
+        <p className="text-gray-600 text-sm">
+          This shows the distribution of realistic monthly income ranges for {businessModel}
+        </p>
+      </div>
+      
+      <div className="relative bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
         <svg
           ref={svgRef}
-          width="100%"
-          height="300"
-          viewBox="0 0 400 300"
+          width={dimensions.width}
+          height={dimensions.height}
+          viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
           onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          className="cursor-crosshair"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="cursor-crosshair w-full h-auto"
+          style={{ maxWidth: '100%', height: 'auto' }}
         >
           {/* Gradient definitions */}
           <defs>
@@ -121,9 +190,9 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
               x2="100%"
               y2="0%"
             >
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
-              <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#06d6a0" stopOpacity="0.3" />
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
+              <stop offset="40%" stopColor="#8b5cf6" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#06d6a0" stopOpacity="0.2" />
             </linearGradient>
             <linearGradient
               id="curveGradient"
@@ -133,19 +202,41 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
               y2="0%"
             >
               <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="50%" stopColor="#8b5cf6" />
+              <stop offset="40%" stopColor="#8b5cf6" />
               <stop offset="100%" stopColor="#06d6a0" />
             </linearGradient>
           </defs>
 
-          {/* Grid lines */}
-          <g opacity="0.1">
-            {[0, 100, 200, 300, 400].map(x => (
-              <line key={x} x1={x} y1="50" x2={x} y2="250" stroke="#6b7280" strokeWidth="1" />
-            ))}
-            {[50, 100, 150, 200, 250].map(y => (
-              <line key={y} x1="0" y1={y} x2="400" y2={y} stroke="#6b7280" strokeWidth="1" />
-            ))}
+          {/* Subtle grid lines */}
+          <g opacity="0.08">
+            {Array.from({ length: 5 }, (_, i) => {
+              const x = (dimensions.width / 4) * i;
+              return (
+                <line
+                  key={`v-${i}`}
+                  x1={x}
+                  y1={dimensions.height * 0.1}
+                  x2={x}
+                  y2={dimensions.height * 0.85}
+                  stroke="#6b7280"
+                  strokeWidth="1"
+                />
+              );
+            })}
+            {Array.from({ length: 4 }, (_, i) => {
+              const y = dimensions.height * 0.1 + (dimensions.height * 0.75 / 3) * i;
+              return (
+                <line
+                  key={`h-${i}`}
+                  x1={0}
+                  y1={y}
+                  x2={dimensions.width}
+                  y2={y}
+                  stroke="#6b7280"
+                  strokeWidth="1"
+                />
+              );
+            })}
           </g>
 
           {/* Area under curve */}
@@ -161,78 +252,116 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
             stroke="url(#curveGradient)"
             strokeWidth="3"
             strokeLinecap="round"
+            strokeLinejoin="round"
           />
 
           {/* Interactive elements */}
           {isHovering && (
             <>
+              {/* Vertical line */}
               <line
                 x1={mousePosition.x}
-                y1="50"
+                y1={dimensions.height * 0.1}
                 x2={mousePosition.x}
-                y2="250"
-                stroke="#6b7280"
+                y2={dimensions.height * 0.85}
+                stroke="#8b5cf6"
                 strokeWidth="2"
-                strokeDasharray="5,5"
-                opacity="0.7"
+                strokeDasharray="4,4"
+                opacity="0.8"
               />
+              {/* Dot on curve */}
               <circle
                 cx={mousePosition.x}
                 cy={getCurveY(mousePosition.x)}
                 r="6"
                 fill="#8b5cf6"
                 stroke="white"
-                strokeWidth="2"
+                strokeWidth="3"
+                filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
               />
             </>
           )}
+
+          {/* Y-axis labels */}
+          <text
+            x={-10}
+            y={dimensions.height * 0.15}
+            textAnchor="end"
+            className="text-xs fill-gray-500 font-medium"
+          >
+            High
+          </text>
+          <text
+            x={-10}
+            y={dimensions.height * 0.8}
+            textAnchor="end"
+            className="text-xs fill-gray-500 font-medium"
+          >
+            Low
+          </text>
+
+          {/* X-axis labels with proper spacing */}
+          <g transform={`translate(0, ${dimensions.height * 0.92})`}>
+            <text x={0} textAnchor="start" className="text-xs fill-gray-500 font-medium">
+              $0
+            </text>
+            <text x={dimensions.width * 0.2} textAnchor="middle" className="text-xs fill-gray-500 font-medium">
+              $1K
+            </text>
+            <text x={dimensions.width * 0.4} textAnchor="middle" className="text-xs fill-gray-600 font-semibold">
+              $5K
+            </text>
+            <text x={dimensions.width * 0.7} textAnchor="middle" className="text-xs fill-gray-500 font-medium">
+              $15K
+            </text>
+            <text x={dimensions.width} textAnchor="end" className="text-xs fill-gray-500 font-medium">
+              $25K+
+            </text>
+          </g>
+
+          {/* "Typical" label at peak */}
+          <text
+            x={dimensions.width * 0.4}
+            y={getCurveY(dimensions.width * 0.4) - 15}
+            textAnchor="middle"
+            className="text-xs fill-gray-600 font-medium"
+          >
+            Typical
+          </text>
+
+          {/* Axis titles with proper spacing */}
+          <text
+            x={dimensions.width / 2}
+            y={dimensions.height - 8}
+            textAnchor="middle"
+            className="text-sm fill-gray-700 font-medium"
+          >
+            Income Range
+          </text>
+          <text
+            x={-dimensions.height / 2}
+            y={15}
+            textAnchor="middle"
+            transform={`rotate(-90, 15, ${dimensions.height / 2})`}
+            className="text-sm fill-gray-700 font-medium"
+          >
+            Likelihood
+          </text>
         </svg>
 
-        {/* Income tooltip */}
+        {/* Tooltip */}
         {isHovering && (
           <div
-            className="absolute bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium pointer-events-none z-10 shadow-lg"
+            className="absolute bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium pointer-events-none z-10 shadow-xl border border-gray-700"
             style={{
-              left: Math.min(mousePosition.x + 10, 300),
-              top: getCurveY(mousePosition.x) - 40,
+              left: tooltipPos.left,
+              top: tooltipPos.top,
+              transform: 'translateZ(0)', // Force hardware acceleration
             }}
           >
-            ${getIncomeAtPosition(mousePosition.x).toLocaleString()}/month
+            {formatIncome(getIncomeAtPosition(mousePosition.x))}/month
           </div>
         )}
-
-        {/* Axis labels */}
-        <div className="absolute bottom-2 left-0 text-xs text-gray-500 font-medium">
-          $0
-        </div>
-        <div className="absolute bottom-2 left-1/4 text-xs text-gray-500 font-medium">
-          $1K
-        </div>
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-600 font-semibold">
-          $5K (typical)
-        </div>
-        <div className="absolute bottom-2 right-1/4 text-xs text-gray-500 font-medium">
-          $15K
-        </div>
-        <div className="absolute bottom-2 right-0 text-xs text-gray-500 font-medium">
-          $25K+
-        </div>
-        
-        {/* Y-axis label */}
-        <div className="absolute top-2 left-0 text-xs text-gray-500 font-medium">
-          High
-        </div>
-        <div className="absolute bottom-16 left-0 text-xs text-gray-500 font-medium">
-          Low
-        </div>
-        
-        {/* Axis titles */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-sm text-gray-700 font-medium">
-          Income Range
-        </div>
-        <div className="absolute top-1/2 left-0 transform -translate-y-1/2 -rotate-90 text-sm text-gray-700 font-medium origin-center">
-          Likelihood
-        </div>
       </div>
     </div>
   );
@@ -997,12 +1126,14 @@ Format as:
 
             {/* Struggles and Solutions - Fixed styling with single border and rounded corners */}
             {aiAnalysis && (
-              <div className="bg-white rounded-2xl p-8 mb-8 border-4 border-transparent" style={{
-                background: 'white',
-                borderRadius: '1rem',
-                borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1',
-                borderImageSlice: 1
-              }}>
+              <div 
+                className="bg-white rounded-2xl p-8 mb-8"
+                style={{
+                  border: '3px solid transparent',
+                  borderRadius: '1rem',
+                  background: 'linear-gradient(white, white) padding-box, linear-gradient(45deg, #3b82f6, #8b5cf6) border-box'
+                }}
+              >
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
                   Things You'll Struggle With
                 </h3>

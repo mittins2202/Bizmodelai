@@ -105,12 +105,12 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
       {/* Confetti Animation */}
       <Confetti />
 
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 md:p-8 z-50">
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full relative overflow-hidden"
+          className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
         >
           {/* Background decoration */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50"></div>

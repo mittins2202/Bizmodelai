@@ -18,7 +18,6 @@ import {
   BarChart3,
   FileText,
   Lock,
-  Calendar,
 } from "lucide-react";
 import { QuizData, BusinessPath } from "../types";
 import { generatePersonalizedPaths } from "../utils/quizLogic";

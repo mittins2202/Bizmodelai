@@ -221,7 +221,15 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
 
   const handleLearnMore = (path: BusinessPath) => {
     console.log("Learn more about why", path.name, "fits this user");
-    setShowUnlockModal(true);
+
+    // If user has already unlocked analysis, navigate directly to business model detail page
+    if (hasUnlockedAnalysis) {
+      navigate(`/business/${path.id}`);
+    } else {
+      // Otherwise, show the paywall modal
+      setPaywallType("learn-more");
+      setShowUnlockModal(true);
+    }
   };
 
   const handleUnlockAnalysis = () => {

@@ -46,8 +46,9 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
       case "learn-more":
         return {
           title: "This Page Is Locked",
-          subtitle:
-            "This business model was matched to you by our AI—but it's locked until you unlock full access.",
+          subtitle: title
+            ? `Get detailed insights about ${title} and how it fits your unique profile.`
+            : "This business model was matched to you by our AI—but it's locked until you unlock full access.",
           description: "With the $9.99 upgrade, you'll get:",
           features: [
             "Your 3 best-fit business models",
@@ -55,9 +56,10 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
             "Challenges to expect and how to beat them",
             "A skill map showing what you already have and what to build",
             "Real startup guides, income data, and resources for all 18 models",
+            "Personalized action plans and step-by-step roadmaps",
           ],
           buttonText: "Unlock All for $9.99",
-          secondaryButton: "No Thanks – Return to Results",
+          secondaryButton: "No Thanks – Return to Explorer",
         };
 
       case "full-report":

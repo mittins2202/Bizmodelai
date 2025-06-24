@@ -21,8 +21,9 @@ const BusinessExplorer = () => {
   const [paywallType, setPaywallType] = useState<
     "quiz-required" | "learn-more"
   >("quiz-required");
+  const [selectedBusinessId, setSelectedBusinessId] = useState<string>("");
   const navigate = useNavigate();
-  const { hasCompletedQuiz, canAccessBusinessModel } = usePaywall();
+  const { hasCompletedQuiz, canAccessBusinessModel, setHasUnlockedAnalysis } = usePaywall();
 
   const categories = [
     "All",
@@ -40,6 +41,44 @@ const BusinessExplorer = () => {
 
   const handleCardExpand = (modelId: string) => {
     setExpandedCard((current) => (current === modelId ? null : modelId));
+  };
+
+  const handleLearnMore = (businessId: string) => {
+    // Check if user has completed quiz
+    if (!hasCompletedQuiz) {
+      setPaywallType("quiz-required");
+      setShowPaywallModal(true);
+      return;
+    }
+
+    // Check if user can access business model details (has paid)
+    if (canAccessBusinessModel(businessId)) {
+      // User has paid, navigate directly
+      navigate(`/business/${businessId}`);
+    } else {
+      // User has completed quiz but hasn't paid, show paywall
+      setSelectedBusinessId(businessId);
+      setPaywallType("learn-more");
+      setShowPaywallModal(true);
+    }
+  };
+
+  const handlePaywallUnlock = () => {
+    if (paywallType === "quiz-required") {
+      // Navigate to quiz
+      navigate("/quiz");
+    } else if (paywallType === "learn-more") {
+      // Simulate payment and unlock access
+      setHasUnlockedAnalysis(true);
+      setShowPaywallModal(false);
+      // Navigate to the business model page
+      navigate(`/business/${selectedBusinessId}`);
+    }
+  };
+
+  const handlePaywallClose = () => {
+    setShowPaywallModal(false);
+    setSelectedBusinessId("");
   };
 
   return (
@@ -105,7 +144,7 @@ const BusinessExplorer = () => {
             <BusinessModelCard
               key={model.id}
               model={model}
-              navigate={navigate}
+              onLearnMore={handleLearnMore}
               isExpanded={expandedCard === model.id}
               onToggleExpand={() => handleCardExpand(model.id)}
             />
@@ -120,18 +159,27 @@ const BusinessExplorer = () => {
           </div>
         )}
       </div>
+
+      {/* Paywall Modal */}
+      <PaywallModal
+        isOpen={showPaywallModal}
+        onClose={handlePaywallClose}
+        onUnlock={handlePaywallUnlock}
+        type={paywallType}
+        title={selectedBusinessId ? businessModels.find(m => m.id === selectedBusinessId)?.title : undefined}
+      />
     </div>
   );
 };
 
 const BusinessModelCard = ({
   model,
-  navigate,
+  onLearnMore,
   isExpanded,
   onToggleExpand,
 }: {
   model: BusinessModel;
-  navigate: any;
+  onLearnMore: (businessId: string) => void;
   isExpanded: boolean;
   onToggleExpand: () => void;
 }) => {
@@ -166,7 +214,7 @@ const BusinessModelCard = ({
   };
 
   const handleLearnMore = () => {
-    navigate(`/business/${model.id}`);
+    onLearnMore(model.id);
   };
 
   const getSkillsToShow = () => {

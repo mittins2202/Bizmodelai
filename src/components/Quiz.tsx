@@ -141,7 +141,7 @@ const rounds = [
   },
 ];
 
-// Exit Warning Modal Component
+// Exit Warning Modal Component - FIXED to show immediately
 const ExitWarningModal: React.FC<ExitWarningModalProps> = ({
   isOpen,
   onClose,
@@ -150,115 +150,107 @@ const ExitWarningModal: React.FC<ExitWarningModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-        onClick={onClose}
+        // REMOVED initial={{ opacity: 0, scale: 0.9, y: 20 }} to show immediately
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ duration: 0.3 }}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-3xl shadow-2xl max-w-md w-full relative overflow-hidden opacity-100"
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          transition={{ duration: 0.3 }}
-          className="bg-white rounded-3xl shadow-2xl max-w-md w-full relative overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Background decoration */}
-          <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50"></div>
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50"></div>
 
-          <div className="relative p-12 py-16">
-            {/* Close button */}
+        <div className="relative p-12 py-16">
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            aria-label="Close modal"
+          >
+            <X className="h-6 w-6" />
+          </button>
+
+          {/* Warning Icon */}
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-8"
+          >
+            <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="h-10 w-10 text-white" />
+            </div>
+          </motion.div>
+
+          {/* Warning Message */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="text-center mb-10"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+              Are you sure you want to exit?
+            </h2>
+
+            <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
+              <p className="text-lg font-semibold text-red-800 mb-2">
+                ⚠️ You will lose all progress!
+              </p>
+              <p className="text-red-700">
+                You'll need to restart the entire quiz from the beginning to
+                get your personalized business recommendations.
+              </p>
+            </div>
+
+            <p className="text-gray-600 leading-relaxed">
+              The quiz takes 10-15 minutes to complete and provides valuable
+              insights about your perfect business match. Are you sure you
+              want to lose your progress?
+            </p>
+          </motion.div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="space-y-4"
+          >
+            {/* Continue Quiz Button (Primary) */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label="Close modal"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
             >
-              <X className="h-6 w-6" />
+              Continue Quiz
             </button>
 
-            {/* Warning Icon */}
-            <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-center mb-8"
+            {/* Exit Quiz Button (Secondary) */}
+            <button
+              onClick={onConfirmExit}
+              className="w-full border-2 border-red-300 text-red-600 py-4 rounded-xl font-bold text-lg hover:bg-red-50 hover:border-red-400 transition-all duration-300"
             >
-              <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertTriangle className="h-10 w-10 text-white" />
-              </div>
-            </motion.div>
+              Exit Quiz (Lose Progress)
+            </button>
+          </motion.div>
 
-            {/* Warning Message */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-center mb-10"
-            >
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                Are you sure you want to exit?
-              </h2>
-
-              <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
-                <p className="text-lg font-semibold text-red-800 mb-2">
-                  ⚠️ You will lose all progress!
-                </p>
-                <p className="text-red-700">
-                  You'll need to restart the entire quiz from the beginning to
-                  get your personalized business recommendations.
-                </p>
-              </div>
-
-              <p className="text-gray-600 leading-relaxed">
-                The quiz takes 10-15 minutes to complete and provides valuable
-                insights about your perfect business match. Are you sure you
-                want to lose your progress?
-              </p>
-            </motion.div>
-
-            {/* Action Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="space-y-4"
-            >
-              {/* Continue Quiz Button (Primary) */}
-              <button
-                onClick={onClose}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
-              >
-                Continue Quiz
-              </button>
-
-              {/* Exit Quiz Button (Secondary) */}
-              <button
-                onClick={onConfirmExit}
-                className="w-full border-2 border-red-300 text-red-600 py-4 rounded-xl font-bold text-lg hover:bg-red-50 hover:border-red-400 transition-all duration-300"
-              >
-                Exit Quiz (Lose Progress)
-              </button>
-            </motion.div>
-
-            {/* Additional Info */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              className="text-center mt-8"
-            >
-              <p className="text-sm text-gray-500">
-                💡 Tip: Your results will be personalized based on all your
-                answers
-              </p>
-            </motion.div>
-          </div>
-        </motion.div>
+          {/* Additional Info */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="text-center mt-8"
+          >
+            <p className="text-sm text-gray-500">
+              💡 Tip: Your results will be personalized based on all your
+              answers
+            </p>
+          </motion.div>
+        </div>
       </motion.div>
-    </AnimatePresence>
+    </div>
   );
 };
 
@@ -604,8 +596,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               <button
                 onClick={handleRoundContinue}
                 className={`group bg-gradient-to-r ${currentRoundInfo.color} text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 Start Round {currentRoundInfo.id}
                 <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />

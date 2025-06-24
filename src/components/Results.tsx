@@ -1021,7 +1021,9 @@ Business Path Platform - businesspath.com
 
                     {/* Key Metrics in compact grid */}
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                      <div className="bg-gray-50 rounded-lg p-3">
+                      <div
+                        className={`${index === 0 ? "bg-white" : "bg-gray-50"} rounded-lg p-3`}
+                      >
                         <div className="flex items-center mb-1">
                           <Clock className="h-4 w-4 text-gray-500 mr-1" />
                           <span className="text-xs font-medium text-gray-700">
@@ -1032,7 +1034,9 @@ Business Path Platform - businesspath.com
                           {path.timeToProfit}
                         </div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-3">
+                      <div
+                        className={`${index === 0 ? "bg-white" : "bg-gray-50"} rounded-lg p-3`}
+                      >
                         <div className="flex items-center mb-1">
                           <DollarSign className="h-4 w-4 text-gray-500 mr-1" />
                           <span className="text-xs font-medium text-gray-700">

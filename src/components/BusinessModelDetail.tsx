@@ -27,7 +27,7 @@ interface BusinessModelDetailProps {
   quizData?: QuizData | null;
 }
 
-interface IncomeGraphProps {
+interface IncomeDistributionGraphProps {
   businessModel: string;
 }
 
@@ -43,19 +43,22 @@ interface AIPersonalizedAnalysis {
   };
 }
 
-const IncomeGraph: React.FC<IncomeGraphProps> = ({ businessModel }) => {
+const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ businessModel }) => {
   const [mousePosition, setMousePosition] = useState({ x: 200, y: 150 });
   const [isHovering, setIsHovering] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Income data points for the curve
-  const incomeData = [
-    { month: 0, income: 0 },
-    { month: 3, income: 500 },
-    { month: 6, income: 2000 },
-    { month: 12, income: 8000 },
-    { month: 18, income: 15000 },
-    { month: 24, income: 25000 },
+  // Income distribution data points for bell curve
+  const incomePoints = [
+    { x: 0, income: 0, likelihood: 0.05 },
+    { x: 50, income: 500, likelihood: 0.15 },
+    { x: 100, income: 1500, likelihood: 0.35 },
+    { x: 150, income: 3000, likelihood: 0.65 },
+    { x: 200, income: 5000, likelihood: 0.85 }, // Peak
+    { x: 250, income: 7000, likelihood: 0.65 },
+    { x: 300, income: 10000, likelihood: 0.35 },
+    { x: 350, income: 15000, likelihood: 0.15 },
+    { x: 400, income: 25000, likelihood: 0.05 },
   ];
 
   const handleMouseMove = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -68,21 +71,48 @@ const IncomeGraph: React.FC<IncomeGraphProps> = ({ businessModel }) => {
   };
 
   const getIncomeAtPosition = (x: number) => {
+    // Interpolate income based on x position
     const percentage = x / 400;
     const maxIncome = 25000;
-    const income = Math.round(maxIncome * Math.pow(percentage, 1.2));
+    // Use a more realistic distribution curve
+    const income = Math.round(maxIncome * Math.pow(percentage, 1.5));
     return Math.max(0, income);
   };
 
   const getCurveY = (x: number) => {
-    const percentage = x / 400;
-    return 250 - 200 * Math.pow(percentage, 1.2);
+    // Bell curve formula: peak at center (x=200), tapering to edges
+    const center = 200;
+    const width = 120;
+    const height = 180;
+    const baseY = 250;
+    
+    const bellValue = Math.exp(-Math.pow(x - center, 2) / (2 * Math.pow(width, 2)));
+    return baseY - (height * bellValue);
+  };
+
+  // Generate smooth curve path
+  const generateCurvePath = () => {
+    let path = `M 0 ${getCurveY(0)}`;
+    for (let x = 10; x <= 400; x += 10) {
+      path += ` L ${x} ${getCurveY(x)}`;
+    }
+    return path;
+  };
+
+  // Generate gradient area path
+  const generateAreaPath = () => {
+    let path = `M 0 250`; // Start at bottom
+    for (let x = 0; x <= 400; x += 10) {
+      path += ` L ${x} ${getCurveY(x)}`;
+    }
+    path += ` L 400 250 Z`; // Close the path
+    return path;
   };
 
   return (
     <div className="relative">
       <h3 className="text-xl font-bold text-gray-900 mb-4">
-        Income Potential Over Time
+        Income Potential Distribution
       </h3>
       <div className="relative bg-white p-6 rounded-xl border border-gray-200">
         <svg
@@ -95,23 +125,21 @@ const IncomeGraph: React.FC<IncomeGraphProps> = ({ businessModel }) => {
           onMouseLeave={() => setIsHovering(false)}
           className="cursor-crosshair"
         >
-          {/* Grid lines */}
+          {/* Gradient definitions */}
           <defs>
-            <pattern
-              id="grid"
-              width="40"
-              height="30"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 40 0 L 0 0 0 30"
-                fill="none"
-                stroke="#f3f4f6"
-                strokeWidth="1"
-              />
-            </pattern>
             <linearGradient
-              id="incomeGradient"
+              id="incomeDistributionGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="0%"
+            >
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#06d6a0" stopOpacity="0.3" />
+            </linearGradient>
+            <linearGradient
+              id="curveGradient"
               x1="0%"
               y1="0%"
               x2="100%"
@@ -122,14 +150,30 @@ const IncomeGraph: React.FC<IncomeGraphProps> = ({ businessModel }) => {
               <stop offset="100%" stopColor="#06d6a0" />
             </linearGradient>
           </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
 
-          {/* Income curve */}
+          {/* Grid lines */}
+          <g opacity="0.1">
+            {[0, 100, 200, 300, 400].map(x => (
+              <line key={x} x1={x} y1="50" x2={x} y2="250" stroke="#6b7280" strokeWidth="1" />
+            ))}
+            {[50, 100, 150, 200, 250].map(y => (
+              <line key={y} x1="0" y1={y} x2="400" y2={y} stroke="#6b7280" strokeWidth="1" />
+            ))}
+          </g>
+
+          {/* Area under curve */}
           <path
-            d="M 0 250 Q 100 220 200 150 Q 300 80 400 50"
+            d={generateAreaPath()}
+            fill="url(#incomeDistributionGradient)"
+          />
+
+          {/* Bell curve line */}
+          <path
+            d={generateCurvePath()}
             fill="none"
-            stroke="url(#incomeGradient)"
+            stroke="url(#curveGradient)"
             strokeWidth="3"
+            strokeLinecap="round"
           />
 
           {/* Interactive elements */}
@@ -137,18 +181,19 @@ const IncomeGraph: React.FC<IncomeGraphProps> = ({ businessModel }) => {
             <>
               <line
                 x1={mousePosition.x}
-                y1="0"
+                y1="50"
                 x2={mousePosition.x}
-                y2="300"
+                y2="250"
                 stroke="#6b7280"
-                strokeWidth="1"
+                strokeWidth="2"
                 strokeDasharray="5,5"
+                opacity="0.7"
               />
               <circle
                 cx={mousePosition.x}
                 cy={getCurveY(mousePosition.x)}
                 r="6"
-                fill="#3b82f6"
+                fill="#8b5cf6"
                 stroke="white"
                 strokeWidth="2"
               />
@@ -159,7 +204,7 @@ const IncomeGraph: React.FC<IncomeGraphProps> = ({ businessModel }) => {
         {/* Income tooltip */}
         {isHovering && (
           <div
-            className="absolute bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium pointer-events-none z-10"
+            className="absolute bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium pointer-events-none z-10 shadow-lg"
             style={{
               left: Math.min(mousePosition.x + 10, 300),
               top: getCurveY(mousePosition.x) - 40,
@@ -170,15 +215,36 @@ const IncomeGraph: React.FC<IncomeGraphProps> = ({ businessModel }) => {
         )}
 
         {/* Axis labels */}
-        <div className="absolute bottom-2 left-0 text-xs text-gray-500">
-          Month 0
-        </div>
-        <div className="absolute bottom-2 right-0 text-xs text-gray-500">
-          Month 24
-        </div>
-        <div className="absolute top-2 left-0 text-xs text-gray-500">$25K</div>
-        <div className="absolute bottom-2 left-0 text-xs text-gray-500 mt-4">
+        <div className="absolute bottom-2 left-0 text-xs text-gray-500 font-medium">
           $0
+        </div>
+        <div className="absolute bottom-2 left-1/4 text-xs text-gray-500 font-medium">
+          $1K
+        </div>
+        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-600 font-semibold">
+          $5K (typical)
+        </div>
+        <div className="absolute bottom-2 right-1/4 text-xs text-gray-500 font-medium">
+          $15K
+        </div>
+        <div className="absolute bottom-2 right-0 text-xs text-gray-500 font-medium">
+          $25K+
+        </div>
+        
+        {/* Y-axis label */}
+        <div className="absolute top-2 left-0 text-xs text-gray-500 font-medium">
+          High
+        </div>
+        <div className="absolute bottom-16 left-0 text-xs text-gray-500 font-medium">
+          Low
+        </div>
+        
+        {/* Axis titles */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-sm text-gray-700 font-medium">
+          Income Range
+        </div>
+        <div className="absolute top-1/2 left-0 transform -translate-y-1/2 -rotate-90 text-sm text-gray-700 font-medium origin-center">
+          Likelihood
         </div>
       </div>
     </div>
@@ -225,8 +291,6 @@ const BusinessModelDetail: React.FC<BusinessModelDetailProps> = ({
       setIsGeneratingAI(false);
     }
   }, [businessId, quizData, navigate]);
-
-  // Remove scroll behavior - navigation should start at top
 
   const generateAIAnalysis = async (data: QuizData, path: BusinessPath) => {
     try {
@@ -588,6 +652,16 @@ Focus on their specific weaknesses and how to overcome them.`;
 
   const fitLevel = getFitLevel(userFitScore);
 
+  // Generate 3 paragraphs for business description
+  const getBusinessDescription = (path: BusinessPath) => {
+    const paragraphs = [
+      path.detailedDescription,
+      `This business model typically requires ${path.startupCost} to get started and can potentially generate ${path.potentialIncome} in income. Most entrepreneurs see their first profits within ${path.timeToProfit}, making it ${path.difficulty.toLowerCase()} to launch compared to other business models. The scalability is considered high, meaning your income potential can grow significantly as you develop your skills and expand your operations.`,
+      `Success in ${path.name} depends heavily on your ability to adapt to market changes and consistently deliver value to your target audience. The most successful entrepreneurs in this field focus on building strong systems, maintaining excellent customer relationships, and continuously improving their offerings based on feedback and market demands.`
+    ];
+    return paragraphs;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar Navigation */}
@@ -642,14 +716,16 @@ Focus on their specific weaknesses and how to overcome them.`;
             {/* Income Graph and Description */}
             <div className="grid lg:grid-cols-3 gap-12 mb-12">
               <div className="lg:col-span-2">
-                <IncomeGraph businessModel={businessPath.name} />
+                <IncomeDistributionGraph businessModel={businessPath.name} />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
                   About {businessPath.name}
                 </h3>
-                <div className="prose prose-lg text-gray-700">
-                  <p>{businessPath.detailedDescription}</p>
+                <div className="prose prose-lg text-gray-700 space-y-4">
+                  {getBusinessDescription(businessPath).map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -750,24 +826,6 @@ Focus on their specific weaknesses and how to overcome them.`;
               </div>
             </div>
 
-            {/* Tools */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg mb-12">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                <Package className="h-6 w-6 mr-3 text-purple-600" />
-                Tools You'll Use
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {businessPath.tools.map((tool, index) => (
-                  <span
-                    key={index}
-                    className="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-medium"
-                  >
-                    {tool}
-                  </span>
-                ))}
-              </div>
-            </div>
-
             {/* Pros and Cons */}
             <div className="grid md:grid-cols-2 gap-8 mb-12">
               <div className="bg-white rounded-2xl p-8 shadow-lg">
@@ -798,6 +856,24 @@ Focus on their specific weaknesses and how to overcome them.`;
                     </li>
                   ))}
                 </ul>
+              </div>
+            </div>
+
+            {/* Tools */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg mb-12">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <Package className="h-6 w-6 mr-3 text-purple-600" />
+                Tools You'll Use
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {businessPath.tools.map((tool, index) => (
+                  <span
+                    key={index}
+                    className="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-medium"
+                  >
+                    {tool}
+                  </span>
+                ))}
               </div>
             </div>
           </section>

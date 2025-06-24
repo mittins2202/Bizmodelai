@@ -789,18 +789,6 @@ Format as:
     return struggles;
   };
 
-  // Get scalability score based on difficulty
-  const getScalabilityScore = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy": return 90;
-      case "Medium": return 70;
-      case "Hard": return 50;
-      default: return 70;
-    }
-  };
-
-  const scalabilityScore = getScalabilityScore(businessPath.difficulty);
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
@@ -884,44 +872,21 @@ Format as:
                     <Target className="h-6 w-6 mr-3 text-green-600" />
                     Scalability Indicator
                   </h3>
-                  
-                  {/* Segmented Scalability Bar */}
-                  <div className="space-y-4">
-                    {/* Labels above the bar */}
-                    <div className="flex justify-between text-sm font-medium text-gray-600">
-                      <span className="text-center flex-1">Low</span>
-                      <span className="text-center flex-1">Medium</span>
-                      <span className="text-center flex-1">High</span>
+                  <div className="flex items-center">
+                    <div className="flex-1 bg-gray-200 rounded-full h-3 mr-4">
+                      <div
+                        className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full"
+                        style={{
+                          width:
+                            businessPath.difficulty === "Easy"
+                              ? "90%"
+                              : businessPath.difficulty === "Medium"
+                                ? "70%"
+                                : "50%",
+                        }}
+                      />
                     </div>
-                    
-                    {/* Segmented bar container */}
-                    <div className="relative">
-                      {/* Background segments */}
-                      <div className="flex h-4 rounded-full overflow-hidden bg-gray-200">
-                        <div className="flex-1 bg-red-200 border-r border-white"></div>
-                        <div className="flex-1 bg-yellow-200 border-r border-white"></div>
-                        <div className="flex-1 bg-green-200"></div>
-                      </div>
-                      
-                      {/* Gradient fill bar */}
-                      <div className="absolute inset-0 flex h-4 rounded-full overflow-hidden">
-                        <div 
-                          className="bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full transition-all duration-500"
-                          style={{ width: `${scalabilityScore}%` }}
-                        ></div>
-                      </div>
-                      
-                      {/* Indicator marker */}
-                      <div 
-                        className="absolute top-0 h-4 w-1 bg-white shadow-lg rounded-full transition-all duration-500"
-                        style={{ left: `${scalabilityScore}%`, transform: 'translateX(-50%)' }}
-                      ></div>
-                    </div>
-                    
-                    {/* Score display */}
-                    <div className="text-center">
-                      <span className="text-lg font-bold text-gray-900">{scalabilityScore}% Scalability</span>
-                    </div>
+                    <span className="font-medium text-gray-900">High</span>
                   </div>
                 </div>
               </div>

@@ -78,6 +78,7 @@ const Confetti: React.FC = () => {
 const EmailCapture: React.FC<EmailCaptureProps> = ({
   onEmailSubmit,
   onContinueAsGuest,
+  onReturnToQuiz,
 }) => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);

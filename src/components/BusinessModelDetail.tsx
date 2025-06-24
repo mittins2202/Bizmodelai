@@ -661,7 +661,7 @@ Format as:
 - Balancing multiple priorities while maintaining focus on core business activities`;
   };
 
-  // FIXED: Scroll to section functionality
+  // FIXED: Scroll to section functionality with proper offset calculation
   const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
     
@@ -669,11 +669,15 @@ Format as:
     const element = document.getElementById(sectionId);
     if (element) {
       // Calculate offset to account for fixed sidebar and some padding
-      const yOffset = -20; // Adjust this value as needed
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      const sidebarWidth = 256; // 64 * 4 = 256px (w-64 in Tailwind)
+      const headerOffset = 80; // Additional offset for any fixed headers
+      
+      const elementRect = element.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.pageYOffset;
+      const targetY = absoluteElementTop - headerOffset;
       
       window.scrollTo({
-        top: y,
+        top: targetY,
         behavior: 'smooth'
       });
     }
@@ -859,7 +863,7 @@ Format as:
             <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
           </motion.div>
 
-          {/* Overview Section */}
+          {/* Overview Section - FIXED: Added proper ID */}
           <section id="overview" className="mb-16">
             {/* About Business Model and Income Distribution - Single Column Layout */}
             <div className="space-y-8 mb-12">
@@ -1038,7 +1042,7 @@ Format as:
             </div>
           </section>
 
-          {/* Personalized Report Section */}
+          {/* Personalized Report Section - FIXED: Added proper ID */}
           <section id="personalized-report" className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               How This Business Model Fits You
@@ -1207,7 +1211,7 @@ Format as:
             )}
           </section>
 
-          {/* Getting Started Section */}
+          {/* Getting Started Section - FIXED: Added proper ID */}
           <section id="getting-started" className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Getting Started

@@ -405,6 +405,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   };
 
   const handleBackButtonClick = () => {
+    // Always show exit modal immediately, regardless of page type
     setShowExitModal(true);
   };
 

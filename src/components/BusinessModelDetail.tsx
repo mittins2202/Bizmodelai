@@ -46,7 +46,7 @@ interface AIPersonalizedAnalysis {
 const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ businessModel }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 600, height: 350 }); // Increased height from 300 to 350
+  const [dimensions, setDimensions] = useState({ width: 600, height: 300 }); // Reduced height back to 300
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -56,7 +56,7 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
         const newWidth = Math.max(400, Math.min(800, containerWidth - 48)); // 48px for padding
-        const newHeight = Math.max(300, newWidth * 0.45); // Increased aspect ratio from 0.4 to 0.45
+        const newHeight = Math.max(250, newWidth * 0.375); // Adjusted aspect ratio
         setDimensions({ width: newWidth, height: newHeight });
       }
     };
@@ -93,8 +93,8 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
     // Bell curve formula: peak at center, tapering to edges
     const center = dimensions.width * 0.4; // Peak slightly left of center (typical income)
     const width = dimensions.width * 0.25;
-    const height = dimensions.height * 0.5; // Adjusted for new height
-    const baseY = dimensions.height * 0.75; // Adjusted for new height
+    const height = dimensions.height * 0.5;
+    const baseY = dimensions.height * 0.75;
     
     const bellValue = Math.exp(-Math.pow(x - center, 2) / (2 * Math.pow(width, 2)));
     return baseY - (height * bellValue);
@@ -116,7 +116,7 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
   const generateAreaPath = () => {
     const points = [];
     const step = dimensions.width / 100;
-    const baseY = dimensions.height * 0.75; // Adjusted for new height
+    const baseY = dimensions.height * 0.75;
     
     points.push(`0,${baseY}`); // Start at bottom left
     
@@ -319,17 +319,7 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
             </text>
           </g>
 
-          {/* Removed "Typical" label as requested */}
-
-          {/* Axis titles with increased spacing */}
-          <text
-            x={dimensions.width / 2}
-            y={dimensions.height - 15} // Moved down to maintain same padding from bottom
-            textAnchor="middle"
-            className="text-sm fill-gray-700 font-medium"
-          >
-            Income Range
-          </text>
+          {/* Y-axis title only - removed "Income Range" text */}
           <text
             x={-dimensions.height / 2}
             y={15}
@@ -858,7 +848,7 @@ Format as:
           {/* Overview Section */}
           <section id="overview" className="mb-16">
             {/* About Business Model and Income Distribution - Single Column Layout */}
-            <div className="space-y-12 mb-12">
+            <div className="space-y-8 mb-12">
               {/* About Business Model */}
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">

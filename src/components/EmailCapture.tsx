@@ -115,15 +115,15 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
           {/* Background decoration */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50"></div>
 
-          <div className="relative p-8 md:p-12">
+          <div className="relative p-6 pt-12 md:p-12 md:pt-16">
             {/* Celebration Header */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-center mb-6"
+              className="text-center mb-8"
             >
-              <div className="text-6xl mb-4">🎉</div>
+              <div className="text-6xl md:text-7xl mb-6">🎉</div>
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

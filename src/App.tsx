@@ -299,6 +299,7 @@ const QuizWithNavigation: React.FC<{
         <EmailCapture
           onEmailSubmit={handleEmailSubmit}
           onContinueAsGuest={handleContinueAsGuest}
+          onReturnToQuiz={handleReturnToQuiz}
         />
       )}
     </div>

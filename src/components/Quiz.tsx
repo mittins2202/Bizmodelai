@@ -299,6 +299,31 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [showRoundIntro]);
 
+  // Add keyboard event handlers for quiz questions
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle Enter key on quiz questions (not round intro pages)
+      if (!showRoundIntro && event.key === 'Enter') {
+        event.preventDefault();
+        
+        // Check if user can proceed (has answered the question)
+        const currentStepData = quizSteps[currentStep];
+        const canProceed =
+          formData[currentStepData?.field] !== undefined &&
+          (currentStepData?.type !== "multiselect" ||
+            (Array.isArray(formData[currentStepData?.field]) &&
+              (formData[currentStepData?.field] as any[]).length > 0));
+        
+        if (canProceed && !isAnimating) {
+          handleNext();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showRoundIntro, formData, currentStep, isAnimating]);
+
   const handleNext = async () => {
     if (isAnimating) return;
 
@@ -796,18 +821,27 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 Back
               </button>
 
-              <button
-                onClick={handleNext}
-                disabled={!canProceed || isAnimating}
-                className={`flex items-center px-10 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
-                  canProceed && !isAnimating
-                    ? "bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white hover:shadow-xl transform hover:scale-105"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                {isLastStep ? "Get My Results" : "Next"}
-                {!isLastStep && <ChevronRight className="h-5 w-5 ml-2" />}
-              </button>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={handleNext}
+                  disabled={!canProceed || isAnimating}
+                  className={`flex items-center px-10 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
+                    canProceed && !isAnimating
+                      ? "bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white hover:shadow-xl transform hover:scale-105"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                >
+                  {isLastStep ? "Get My Results" : "Next"}
+                  {!isLastStep && <ChevronRight className="h-5 w-5 ml-2" />}
+                </button>
+                
+                {/* Enter key hint */}
+                {canProceed && (
+                  <p className="text-xs text-gray-400 mt-2">
+                    Press Enter to continue
+                  </p>
+                )}
+              </div>
             </motion.div>
           </motion.div>
         </AnimatePresence>

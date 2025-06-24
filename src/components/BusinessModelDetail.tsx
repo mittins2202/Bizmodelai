@@ -661,8 +661,22 @@ Format as:
 - Balancing multiple priorities while maintaining focus on core business activities`;
   };
 
+  // FIXED: Scroll to section functionality
   const handleSectionClick = (sectionId: string) => {
     setActiveSection(sectionId);
+    
+    // Scroll to the section
+    const element = document.getElementById(sectionId);
+    if (element) {
+      // Calculate offset to account for fixed sidebar and some padding
+      const yOffset = -20; // Adjust this value as needed
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth'
+      });
+    }
   };
 
   const sections = [
@@ -1194,7 +1208,7 @@ Format as:
           </section>
 
           {/* Getting Started Section */}
-          <section id="get-started" className="mb-16">
+          <section id="getting-started" className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Getting Started
             </h2>

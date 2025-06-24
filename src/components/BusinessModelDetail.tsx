@@ -1116,22 +1116,27 @@ Format as:
               </div>
             )}
 
-            {/* Struggles and Solutions - Fixed styling with single border and rounded corners */}
+            {/* Struggles and Solutions - Updated with rounded gradient border and shadow */}
             {aiAnalysis && (
-              <div className="bg-white rounded-2xl p-8 mb-8 shadow-lg border-4 border-transparent" style={{
-                borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1'
-              }}>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Things You'll Struggle With
-                </h3>
-                <ul className="space-y-3">
-                  {parseStruggles(aiAnalysis.strugglesAndSolutions).map((struggle, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                      <span className="text-gray-700">{struggle}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="relative bg-white rounded-2xl p-8 mb-8 shadow-lg">
+                {/* Gradient border overlay */}
+                <div className="absolute inset-0 rounded-2xl p-1 bg-gradient-to-r from-blue-500 to-purple-600">
+                  <div className="bg-white rounded-2xl h-full w-full"></div>
+                </div>
+                {/* Content */}
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                    Things You'll Struggle With
+                  </h3>
+                  <ul className="space-y-3">
+                    {parseStruggles(aiAnalysis.strugglesAndSolutions).map((struggle, index) => (
+                      <li key={index} className="flex items-start">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <span className="text-gray-700">{struggle}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             )}
 
@@ -1270,21 +1275,26 @@ Format as:
               </div>
             </div>
 
-            {/* Mistakes to Avoid */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg mb-8 border-4 border-transparent" style={{
-              borderImage: 'linear-gradient(45deg, #ef4444, #f97316) 1'
-            }}>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Mistakes to Avoid
-              </h3>
-              <ul className="space-y-3">
-                {businessPath.userStruggles.map((mistake, index) => (
-                  <li key={index} className="flex items-start">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span className="text-gray-700">{mistake}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Mistakes to Avoid - Updated with rounded gradient border and shadow */}
+            <div className="relative bg-white rounded-2xl p-8 shadow-lg mb-8">
+              {/* Gradient border overlay */}
+              <div className="absolute inset-0 rounded-2xl p-1 bg-gradient-to-r from-red-500 to-orange-500">
+                <div className="bg-white rounded-2xl h-full w-full"></div>
+              </div>
+              {/* Content */}
+              <div className="relative z-10">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                  Mistakes to Avoid
+                </h3>
+                <ul className="space-y-3">
+                  {businessPath.userStruggles.map((mistake, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-gray-700">{mistake}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             {/* View Full Report Button */}

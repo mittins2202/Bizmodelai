@@ -412,7 +412,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     setShowRoundIntro(false);
   };
 
-  // Handle back button on round intro pages
+  // Handle back button on round intro pages - goes to previous question
   const handleRoundBack = () => {
     if (currentStep > 0) {
       const prevStep = currentStep - 1;
@@ -483,9 +483,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       <div
         className={`min-h-screen flex items-center justify-center p-4 bg-gradient-to-br ${currentRoundInfo.bgColor} relative`}
       >
-        {/* Back Arrow Button - Prominent Position */}
+        {/* Back Arrow Button - Shows Exit Modal */}
         <motion.button
-          onClick={handleRoundBack}
+          onClick={handleBackButtonClick}
           className="fixed top-6 left-6 z-20 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-300 transform hover:scale-110 group"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -580,28 +580,44 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               </div>
             </motion.div>
 
-            {/* Continue Button */}
-            <motion.button
-              onClick={handleRoundContinue}
-              className={`group bg-gradient-to-r ${currentRoundInfo.color} text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center mx-auto`}
+            {/* Navigation Buttons */}
+            <motion.div
+              className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
-              Start Round {currentRoundInfo.id}
-              <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
-            </motion.button>
+              {/* Back Button - Goes to Previous Question */}
+              {currentStep > 0 && (
+                <button
+                  onClick={handleRoundBack}
+                  className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5 mr-1" />
+                  Back
+                </button>
+              )}
+
+              {/* Continue Button */}
+              <button
+                onClick={handleRoundContinue}
+                className={`group bg-gradient-to-r ${currentRoundInfo.color} text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center ${currentStep === 0 ? 'mx-auto' : ''}`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Start Round {currentRoundInfo.id}
+                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
+            </motion.div>
 
             {/* Navigation Hint */}
             <motion.p
-              className="text-sm text-gray-400 mt-6"
+              className="text-sm text-gray-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              Press Enter or click the button to continue
+              Or press Enter to continue
             </motion.p>
           </motion.div>
         </div>
@@ -838,7 +854,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 {/* Enter key hint */}
                 {canProceed && (
                   <p className="text-xs text-gray-400 mt-2">
-                    Press Enter to continue
+                    Or press enter to continue
                   </p>
                 )}
               </div>

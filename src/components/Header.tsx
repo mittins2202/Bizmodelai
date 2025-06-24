@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import UserMenu from './UserMenu';
 
-export function Header() {
+function Header() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -135,3 +135,5 @@ export function Header() {
     </header>
   );
 }
+
+export default Header;

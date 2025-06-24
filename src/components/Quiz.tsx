@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
@@ -281,6 +281,24 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     );
   };
 
+  // Add keyboard event handlers for round intro pages
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (showRoundIntro) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          handleRoundContinue();
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          setShowExitModal(true);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showRoundIntro]);
+
   const handleNext = async () => {
     if (isAnimating) return;
 
@@ -369,6 +387,30 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     setShowRoundIntro(false);
   };
 
+  // Handle back button on round intro pages
+  const handleRoundBack = () => {
+    if (currentStep > 0) {
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      
+      // Find the round for the previous step
+      const prevRoundInfo = rounds.find(
+        (round) =>
+          prevStep >= round.questionRange[0] &&
+          prevStep <= round.questionRange[1],
+      );
+      
+      if (prevRoundInfo) {
+        setCurrentRound(prevRoundInfo.id);
+      }
+      
+      setShowRoundIntro(false);
+    } else {
+      // If we're at the first step, show exit modal
+      setShowExitModal(true);
+    }
+  };
+
   const handleOptionSelect = (value: any) => {
     const field = quizSteps[currentStep].field;
     const stepType = quizSteps[currentStep].type;
@@ -418,7 +460,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       >
         {/* Back Arrow Button - Prominent Position */}
         <motion.button
-          onClick={handleBackButtonClick}
+          onClick={handleRoundBack}
           className="fixed top-6 left-6 z-20 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-300 transform hover:scale-110 group"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}

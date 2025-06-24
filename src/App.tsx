@@ -256,6 +256,13 @@ const QuizWithNavigation: React.FC<{
     navigate("/results");
   };
 
+  const handleReturnToQuiz = () => {
+    console.log("Returning to quiz");
+    setShowEmailCapture(false);
+    setQuizData(null);
+    // Stay on current page (quiz)
+  };
+
   const handleSkipToResults = () => {
     console.log("Skip button clicked! Generating mock data and navigating...");
     const mockData = generateMockQuizData();

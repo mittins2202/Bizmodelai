@@ -1257,7 +1257,7 @@ export const quizSteps: QuizStep[] = [
       {
         value: 3,
         label: "Neutral",
-        description: "I don't love or hate it���depends on the strategy.",
+        description: "I don't love or hate it—depends on the strategy.",
       },
       {
         value: 4,

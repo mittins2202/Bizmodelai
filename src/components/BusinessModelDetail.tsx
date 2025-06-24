@@ -48,19 +48,6 @@ const IncomeDistributionGraph: React.FC<IncomeDistributionGraphProps> = ({ busin
   const [isHovering, setIsHovering] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Income distribution data points for bell curve
-  const incomePoints = [
-    { x: 0, income: 0, likelihood: 0.05 },
-    { x: 50, income: 500, likelihood: 0.15 },
-    { x: 100, income: 1500, likelihood: 0.35 },
-    { x: 150, income: 3000, likelihood: 0.65 },
-    { x: 200, income: 5000, likelihood: 0.85 }, // Peak
-    { x: 250, income: 7000, likelihood: 0.65 },
-    { x: 300, income: 10000, likelihood: 0.35 },
-    { x: 350, income: 15000, likelihood: 0.15 },
-    { x: 400, income: 25000, likelihood: 0.05 },
-  ];
-
   const handleMouseMove = (event: React.MouseEvent<SVGSVGElement>) => {
     if (svgRef.current) {
       const rect = svgRef.current.getBoundingClientRect();
@@ -267,9 +254,6 @@ const BusinessModelDetail: React.FC<BusinessModelDetailProps> = ({
   const [isGeneratingAI, setIsGeneratingAI] = useState(true);
   const [activeSection, setActiveSection] = useState("overview");
 
-  // Check if user came from "get started" link
-  const shouldScrollToGetStarted = location.hash === "#get-started";
-
   useEffect(() => {
     if (!businessId) return;
 
@@ -403,7 +387,7 @@ CONS:
     data: QuizData,
     path: BusinessPath,
   ): Promise<string> => {
-    const prompt = `Based on this user's profile, identify the main challenges they'll face with ${path.name} and provide actionable solutions. Write 2-3 paragraphs.
+    const prompt = `Based on this user's profile, identify the main challenges they'll face with ${path.name} and provide actionable solutions. Format as bullet points.
 
 User Profile:
 - Self Motivation: ${data.selfMotivationLevel}/5
@@ -412,7 +396,7 @@ User Profile:
 - Time Commitment: ${data.weeklyTimeCommitment} hours/week
 - Learning Preference: ${data.learningPreference}
 
-Focus on their specific weaknesses and how to overcome them.`;
+Focus on their specific weaknesses and how to overcome them. Format as bullet points with solutions.`;
 
     try {
       const aiService = AIService.getInstance();
@@ -713,11 +697,9 @@ Focus on their specific weaknesses and how to overcome them.`;
 
           {/* Overview Section */}
           <section id="overview" className="mb-16">
-            {/* Income Graph and Description */}
-            <div className="grid lg:grid-cols-3 gap-12 mb-12">
-              <div className="lg:col-span-2">
-                <IncomeDistributionGraph businessModel={businessPath.name} />
-              </div>
+            {/* About Business Model and Income Distribution - Single Column Layout */}
+            <div className="space-y-12 mb-12">
+              {/* About Business Model */}
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
                   About {businessPath.name}
@@ -727,6 +709,11 @@ Focus on their specific weaknesses and how to overcome them.`;
                     <p key={index}>{paragraph}</p>
                   ))}
                 </div>
+              </div>
+
+              {/* Income Distribution Graph */}
+              <div>
+                <IncomeDistributionGraph businessModel={businessPath.name} />
               </div>
             </div>
 
@@ -884,10 +871,10 @@ Focus on their specific weaknesses and how to overcome them.`;
               How This Business Model Fits You
             </h2>
 
-            {/* Fit Assessment */}
+            {/* Merged Fit Assessment and AI Analysis */}
             <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
               <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Is this model a good fit for you?
+                Is This Model a Good Fit For You?
               </h3>
               <div className="flex items-center mb-4">
                 <div
@@ -904,33 +891,26 @@ Focus on their specific weaknesses and how to overcome them.`;
                   {userFitScore}% - {fitLevel.level}
                 </div>
               </div>
-              <p className="text-gray-700">{fitLevel.description}</p>
-            </div>
-
-            {/* AI Generated Fit Description */}
-            {isGeneratingAI ? (
-              <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
+              
+              {/* AI Generated Fit Description */}
+              {isGeneratingAI ? (
                 <div className="animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded mb-4"></div>
                   <div className="space-y-3">
                     <div className="h-4 bg-gray-200 rounded"></div>
                     <div className="h-4 bg-gray-200 rounded"></div>
                     <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              aiAnalysis && (
-                <div className="bg-white rounded-2xl p-8 shadow-lg mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    Why We Chose This For You
-                  </h3>
-                  <div className="prose prose-lg text-gray-700">
+              ) : (
+                aiAnalysis && (
+                  <div className="prose prose-lg text-gray-700 space-y-4">
+                    <p>{fitLevel.description}</p>
                     <p>{aiAnalysis.fitDescription}</p>
+                    <p>Based on your comprehensive assessment, this business model offers excellent alignment with your goals, personality traits, and available resources. Your unique combination of skills and preferences creates natural advantages that can be leveraged for success in this field.</p>
                   </div>
-                </div>
-              )
-            )}
+                )
+              )}
+            </div>
 
             {/* Personalized Pros and Cons */}
             {aiAnalysis && (
@@ -967,14 +947,28 @@ Focus on their specific weaknesses and how to overcome them.`;
               </div>
             )}
 
-            {/* Struggles and Solutions */}
+            {/* Struggles and Solutions - Updated styling */}
             {aiAnalysis && (
-              <div className="bg-yellow-50 rounded-2xl p-8 mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  Things You'll Struggle With
-                </h3>
-                <div className="prose prose-lg text-gray-700">
-                  <p>{aiAnalysis.strugglesAndSolutions}</p>
+              <div className="bg-white rounded-2xl p-8 mb-8 border-4 border-transparent bg-clip-padding" style={{
+                background: 'white',
+                borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1'
+              }}>
+                <div className="border-4 border-transparent rounded-2xl p-8" style={{
+                  borderImage: 'linear-gradient(45deg, #3b82f6, #8b5cf6) 1'
+                }}>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                    Things You'll Struggle With
+                  </h3>
+                  <div className="prose prose-lg text-gray-700">
+                    <ul className="space-y-3">
+                      {aiAnalysis.strugglesAndSolutions.split('\n').filter(line => line.trim()).map((struggle, index) => (
+                        <li key={index} className="flex items-start">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                          <span>{struggle.replace(/^[-•*]\s*/, '')}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             )}
@@ -1115,7 +1109,9 @@ Focus on their specific weaknesses and how to overcome them.`;
             </div>
 
             {/* Mistakes to Avoid */}
-            <div className="bg-red-50 rounded-2xl p-8 mb-8">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-transparent" style={{
+              borderImage: 'linear-gradient(45deg, #ef4444, #f97316) 1'
+            }}>
               <h3 className="text-2xl font-bold text-gray-900 mb-6">
                 Mistakes to Avoid
               </h3>
@@ -1130,7 +1126,7 @@ Focus on their specific weaknesses and how to overcome them.`;
             </div>
 
             {/* View Full Report Button */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-8 mt-8">
               <button
                 onClick={() => navigate("/results")}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center mx-auto"

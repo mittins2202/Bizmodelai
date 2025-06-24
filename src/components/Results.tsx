@@ -60,6 +60,7 @@ interface AIInsights {
 }
 
 const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
+  const navigate = useNavigate();
   const [selectedPath, setSelectedPath] = useState<BusinessPath | null>(null);
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const [showFullReport, setShowFullReport] = useState(false);

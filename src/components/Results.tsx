@@ -247,6 +247,26 @@ const Results: React.FC<ResultsProps> = ({ quizData, onBack, userEmail }) => {
     // 4. Redirect to dedicated results page
   };
 
+  const handleBusinessCardPayment = async () => {
+    setIsProcessingPayment(true);
+
+    // Simulate payment processing
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    setHasUnlockedAnalysis(true);
+    setShowPreview(false);
+    setShowUnlockModal(false);
+    setIsProcessingPayment(false);
+
+    // Don't navigate to full report - keep user on current page
+    // This allows them to see the unlocked business cards
+
+    // In a real implementation, this would:
+    // 1. Process payment through Stripe
+    // 2. Save payment record and unlock status
+    // 3. Keep user on results page to see unlocked cards
+  };
+
   const togglePreview = () => {
     setShowPreview(!showPreview);
   };

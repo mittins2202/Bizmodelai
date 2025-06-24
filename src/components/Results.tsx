@@ -580,7 +580,31 @@ Business Path Platform - businesspath.com
                       {hasUnlockedAnalysis ? (
                         // Full content when unlocked
                         <div>
-                          <p className="mb-6">{aiAnalysis.fullAnalysis}</p>
+                          {(() => {
+                            const sentences =
+                              aiAnalysis.fullAnalysis.split(". ");
+                            const thirdLength = Math.ceil(sentences.length / 3);
+
+                            const firstParagraph =
+                              sentences.slice(0, thirdLength).join(". ") +
+                              (sentences.length > thirdLength ? "." : "");
+                            const secondParagraph =
+                              sentences
+                                .slice(thirdLength, thirdLength * 2)
+                                .join(". ") +
+                              (sentences.length > thirdLength * 2 ? "." : "");
+                            const thirdParagraph = sentences
+                              .slice(thirdLength * 2)
+                              .join(". ");
+
+                            return (
+                              <div className="text-blue-50 leading-relaxed text-lg mb-6">
+                                <p className="mb-4">{firstParagraph}</p>
+                                <p className="mb-4">{secondParagraph}</p>
+                                <p className="mb-6">{thirdParagraph}</p>
+                              </div>
+                            );
+                          })()}
 
                           <div className="grid md:grid-cols-2 gap-6 mt-6">
                             <div>

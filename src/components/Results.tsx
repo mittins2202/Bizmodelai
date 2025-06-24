@@ -686,7 +686,7 @@ Business Path Platform - businesspath.com
                                 onClick={() =>
                                   handleLearnMore(personalizedPaths[0])
                                 }
-                                className="text-blue-100 hover:text-white font-medium text-lg transition-all duration-300 inline-flex items-center group"
+                                className="text-white hover:text-gray-300 font-medium text-lg transition-all duration-300 inline-flex items-center group"
                               >
                                 <span>
                                   Get started with {personalizedPaths[0]?.name}

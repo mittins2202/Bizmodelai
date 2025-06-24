@@ -508,7 +508,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               <div className="flex items-center text-gray-500">
                 <Clock className="h-5 w-5 mr-2" />
                 <span className="font-medium">
-                  ~{Math.ceil(currentRoundInfo.totalQuestions * 0.5)} minutes
+                  {currentRoundInfo.timeEstimate}
                 </span>
               </div>
             </motion.div>

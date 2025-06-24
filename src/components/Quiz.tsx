@@ -638,7 +638,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                       <button
                         key={index}
                         onClick={() => handleOptionSelect(option.value)}
-                        className={`p-4 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 ${
+                        className={`p-3 py-4 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 min-h-[90px] flex flex-col justify-center ${
                           formData[currentStepData.field] === option.value
                             ? "border-blue-500 bg-blue-50 shadow-xl transform scale-110"
                             : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"

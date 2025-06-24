@@ -1292,7 +1292,11 @@ Business Path Platform - businesspath.com
       <PaywallModal
         isOpen={showUnlockModal}
         onClose={() => setShowUnlockModal(false)}
-        onUnlock={handlePayment}
+        onUnlock={
+          paywallType === "business-model"
+            ? handleBusinessCardPayment
+            : handlePayment
+        }
         type={paywallType}
       />
     </div>

@@ -675,7 +675,7 @@ Business Path Platform - businesspath.com
                               onClick={() =>
                                 handleViewFullReport(personalizedPaths[0])
                               }
-                              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
+                              className="w-full bg-white text-purple-600 border-2 border-purple-600 py-4 rounded-xl font-bold text-lg hover:bg-purple-50 hover:border-purple-700 hover:text-purple-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
                             >
                               <FileText className="h-5 w-5 mr-2 inline" />
                               View Full Report

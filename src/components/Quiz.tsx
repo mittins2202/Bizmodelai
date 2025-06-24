@@ -527,7 +527,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-100 text-center"
+            className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-100 text-center relative"
           >
             {/* Round Icon */}
             <motion.div
@@ -580,28 +580,16 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               </div>
             </motion.div>
 
-            {/* Navigation Buttons */}
+            {/* Continue Button - Centered */}
             <motion.div
-              className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6"
+              className="flex justify-center mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
             >
-              {/* Back Button - Goes to Previous Question */}
-              {currentStep > 0 && (
-                <button
-                  onClick={handleRoundBack}
-                  className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
-                >
-                  <ChevronLeft className="h-5 w-5 mr-1" />
-                  Back
-                </button>
-              )}
-
-              {/* Continue Button */}
               <button
                 onClick={handleRoundContinue}
-                className={`group bg-gradient-to-r ${currentRoundInfo.color} text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center ${currentStep === 0 ? 'mx-auto' : ''}`}
+                className={`group bg-gradient-to-r ${currentRoundInfo.color} text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 flex items-center`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -612,13 +600,31 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
             {/* Navigation Hint */}
             <motion.p
-              className="text-sm text-gray-400"
+              className="text-sm text-gray-400 mb-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               Or press Enter to continue
             </motion.p>
+
+            {/* Back Button - Bottom Left Corner */}
+            {currentStep > 0 && (
+              <motion.div
+                className="absolute bottom-8 left-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+              >
+                <button
+                  onClick={handleRoundBack}
+                  className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5 mr-1" />
+                  Back
+                </button>
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </div>
@@ -861,6 +867,68 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             </motion.div>
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* TEMPORARY SKIP BUTTON - REMOVE LATER */}
+      <div className="fixed bottom-4 right-4 z-[9999]">
+        <button
+          onClick={() => {
+            console.log("Skip button clicked! Generating mock data and navigating...");
+            const mockData = {
+              mainMotivation: "financial-freedom",
+              firstIncomeTimeline: "3-6-months",
+              successIncomeGoal: 5000,
+              upfrontInvestment: 1000,
+              passionIdentityAlignment: 4,
+              businessExitPlan: "not-sure",
+              businessGrowthSize: "full-time-income",
+              passiveIncomeImportance: 3,
+              weeklyTimeCommitment: 20,
+              longTermConsistency: 4,
+              trialErrorComfort: 3,
+              learningPreference: "hands-on",
+              systemsRoutinesEnjoyment: 3,
+              discouragementResilience: 4,
+              toolLearningWillingness: "yes",
+              organizationLevel: 3,
+              selfMotivationLevel: 4,
+              uncertaintyHandling: 3,
+              repetitiveTasksFeeling: "tolerate",
+              workCollaborationPreference: "mostly-solo",
+              brandFaceComfort: 3,
+              competitivenessLevel: 3,
+              creativeWorkEnjoyment: 4,
+              directCommunicationEnjoyment: 4,
+              workStructurePreference: "some-structure",
+              techSkillsRating: 3,
+              workspaceAvailability: "yes",
+              supportSystemStrength: "small-helpful-group",
+              internetDeviceReliability: 4,
+              familiarTools: ["google-docs-sheets", "canva"],
+              decisionMakingStyle: "after-some-research",
+              riskComfortLevel: 3,
+              feedbackRejectionResponse: 3,
+              pathPreference: "mix",
+              controlImportance: 4,
+              onlinePresenceComfort: "yes",
+              clientCallsComfort: "yes",
+              physicalShippingOpenness: "no",
+              workStylePreference: "mix-both",
+              socialMediaInterest: 3,
+              ecosystemParticipation: "yes",
+              existingAudience: "no",
+              promotingOthersOpenness: "yes",
+              teachVsSolvePreference: "both",
+              meaningfulContributionImportance: 4,
+            };
+            console.log("Generated mock data:", mockData);
+            onComplete(mockData as QuizData);
+          }}
+          className="bg-red-500 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl hover:bg-red-600 transition-all duration-300 transform hover:scale-105 border-2 border-white"
+          style={{ zIndex: 9999 }}
+        >
+          🚀 SKIP TO RESULTS (DEV)
+        </button>
       </div>
 
       {/* Exit Warning Modal */}
